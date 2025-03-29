@@ -1,0 +1,25 @@
+package account;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Login {
+    private List<Accounts> users = new ArrayList<>();
+
+    public Login() {
+        users.add(new Users("US1", "Nanda Prasetya", "pass123", "nanda@unud.ac.id", "USER", 10000.0));
+        users.add(new Admin("ADM1", "Admin Devi", "admin123", "devi@unud.ac.id","ADMIN"));
+    }
+
+    public Accounts login(String username, String password) {
+        for (Accounts user : users) {
+            if (user.getUsername().equals(username) && user.checkPassword(password)) {
+                Session.login(user);
+                return user;
+            }
+        }
+        System.out.println("Login gagal");
+        return null;
+    }
+}
