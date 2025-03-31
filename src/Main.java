@@ -2,6 +2,8 @@ import account.Login;
 import account.Accounts;
 import account.Session;
 import account.Users;
+import View.UserView;
+
 import java.util.Scanner;
 
 public class Main {
@@ -32,6 +34,7 @@ public class Main {
         }
 
         if(user.getRole() == "USER"){
+            UserView.showUserMenu();
             Users loggedUser = (Users) user;
             System.out.println("Saldo Anda: Rp " + loggedUser.getSaldo());
         }
