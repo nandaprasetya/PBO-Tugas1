@@ -52,4 +52,8 @@ public class SecuritiesData {
         sbnsList.add(new SBNs("FR0087", "Obligasi Negara 2025", 1000000, 10000, 6, 12, LocalDate.of(2025, 1, 1)));
         sbnsList.add(new SBNs("ORI021", "ORI Seri 021", 1500000, 5000, 5.5, 12, LocalDate.of(2025, 11, 12)));
     }
+
+    public static ArrayList<Stocks> getStocksList() {
+        return stocksList;
+    }
 }

@@ -16,4 +16,20 @@ public class Stocks extends Securities{
     public ArrayList<Double> getPriceHistory() {
         return priceHistory;
     }
+
+    public String getSector() {
+        return sector;
+    }
+
+    public double getPreviousPrice() {
+        if (priceHistory.size() < 2) return price;
+        return priceHistory.get(priceHistory.size() - 2);
+    }
+
+    public double getCurrentPrice() {
+        if (!priceHistory.isEmpty()) {
+            return priceHistory.get(priceHistory.size() - 1);
+        }
+        return price;
+    }
 }
