@@ -9,5 +9,11 @@ public class MainUtils {
         return padding;
     }
 
+    public static void clearScreen() {
+        System.out.println("\033c");
+        for (int i = 0; i < 20; i++) {
+            System.out.println();
+        }
+    }
 
 }

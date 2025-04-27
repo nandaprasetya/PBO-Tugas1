@@ -4,6 +4,7 @@ import Account.Users;
 import Data.SecuritiesData;
 import Securities.Stocks;
 import Utils.MainUtils;
+import com.sun.tools.javac.Main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +37,8 @@ public class UserController {
 
                     String codeText = watchlist.get(watchlistNumber - 1) + "   ||";
                     String nowPriceStr = String.valueOf((int) nowPrice);
-                    String pricePadding = MainUtils.paddingText(7, nowPriceStr);
-                    String priceText = " " + nowPrice + pricePadding + "||";
+                    String pricePadding = MainUtils.paddingText(9, nowPriceStr);
+                    String priceText = " " + (int) nowPrice + pricePadding + "||";
 
                     String fullChangeText = (nowPrice - lastPrice) > 0 ? "+" + (int) (nowPrice - lastPrice) + "(" + stock.getPriceChangePercentage() + "%)" : (int) (nowPrice - lastPrice) + "(" + stock.getPriceChangePercentage() + "%)";
                     String paddingPercentage = MainUtils.paddingText(19, fullChangeText);
@@ -65,4 +66,42 @@ public class UserController {
         return listWatchlist;
     }
 
+    public static List<String> getlistStocks(){
+        List<String> contentListStock = new ArrayList<>();
+        int noStock = 1;
+        for(Stocks stock : SecuritiesData.getStocksList()){
+            String code = stock.getCode();
+            double price = stock.getCurrentPrice();
+            double priceChange = stock.getPriceChange();
+            String pricePercentage = stock.getPriceChangePercentage();
+            String sector = stock.getSector();
+
+            String nowPriceStr = String.valueOf((int) price);
+            String pricePadding = MainUtils.paddingText(9, nowPriceStr);
+            String priceText = " " + nowPriceStr + pricePadding + "||";
+
+            String fullChangeText = priceChange > 0 ? "+" + (int) priceChange + "(" + pricePercentage + "%)" : (int) priceChange + "(" + pricePercentage + "%)";
+            String paddingPercentage = MainUtils.paddingText(19, fullChangeText);
+            String percentageText = " " + fullChangeText + paddingPercentage + "||";
+
+            String paddingSector = MainUtils.paddingText(14, stock.getSector());
+            String sectorText = " " + sector + paddingSector + "||";
+
+            String fullLineStock = " " + noStock + "   || " + " " + code + "  ||" + priceText + percentageText + sectorText;
+            contentListStock.add(fullLineStock);
+            noStock += 1;
+        }
+        int blankSpace = 8 - (contentListStock.size() % 8);
+        for (int i = 0; i <= blankSpace; i++) {
+            contentListStock.add("                                                                  ||");
+        }
+        return contentListStock;
+    }
+
+    public static int maxPageListStock(){
+        List<String> contentListStock = UserController.getlistStocks();
+        int totalPage = contentListStock.size() / 8;
+
+        return totalPage;
+    }
 }
