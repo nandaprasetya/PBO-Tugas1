@@ -38,4 +38,8 @@ public class Stocks extends Securities{
         double change = (getCurrentPrice() - getPreviousPrice()) / getPreviousPrice() * 100;
         return String.format("%.2f%%", change);
     }
+
+    public double getPriceChange() {
+        return getCurrentPrice() - getPreviousPrice();
+    }
 }
