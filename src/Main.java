@@ -1,3 +1,4 @@
+import Routes.Routes;
 import account.Login;
 import account.Accounts;
 import account.Session;
@@ -26,23 +27,10 @@ public class Main {
         System.out.println("||==================================================================||");
 
         Accounts user = login.login(username, password);
+        Accounts loggedInAccount = Session.getCurrentUser();
 
-        if (user != null) {
-            System.out.println("Selamat datang, " + user.getUsername());
-            System.out.println("Testing Getter ID " + user.getId());
-            System.out.println("Testing Get Role" + user.getRole());
-        }
-
-        if(user.getRole() == "USER"){
-            UserView.showUserMenu();
-            Users loggedUser = (Users) user;
-            System.out.println("Saldo Anda: Rp " + loggedUser.getSaldo());
-        }
-
-        choice = scanner.nextInt();
-        if(choice == 0){
-            Session.logout();
-            System.out.println("Testing Logged out Sukses.");
+        if (loggedInAccount instanceof Users) {
+            Routes.userRoutes();
         }
         scanner.close();
 
