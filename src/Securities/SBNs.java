@@ -27,4 +27,12 @@ public class SBNs extends Securities{
     public LocalDate getMaturityDate() {
         return maturityDate;
     }
+
+    public boolean reduceQuota(int amount) {
+        if (amount <= nationalQuota) {
+            nationalQuota -= amount;
+            return true;
+        }
+        return false;
+    }
 }

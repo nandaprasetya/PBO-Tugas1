@@ -29,7 +29,7 @@ public class Main {
         Accounts loggedInAccount = Session.getCurrentUser();
 
         if (loggedInAccount instanceof Users) {
-            Routes.userRoutes();
+            Routes.userRoutes((Users) loggedInAccount);
         }
         scanner.close();
 

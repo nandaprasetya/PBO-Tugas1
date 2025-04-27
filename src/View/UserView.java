@@ -12,7 +12,7 @@ import java.util.List;
 import static Account.Session.getCurrentUser;
 
 public class UserView {
-
+    
     public static void lineInput(){
         System.out.print("|| MASUKAN KODE MENU : ");
     }
@@ -197,6 +197,14 @@ public class UserView {
                 System.out.println();
             }
         }
+    }
+
+    public static void viewBuy(Users user){
+        System.out.println("||=====================================================================================||");
+        System.out.println("|| Saldo Anda : Rp. " + MainUtils.formatRupiah((long) user.getBalance()) + MainUtils.paddingText(67, MainUtils.formatRupiah((long) user.getBalance())) + "||");
+        System.out.println("||=====================================================================================||");
+        System.out.println("|| Masukan Kode Saham / Sbn Dengan Benar                                               ||");
+        System.out.println("||=====================================================================================||");
     }
 
     public static void showUserMenu(){

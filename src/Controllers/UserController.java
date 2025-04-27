@@ -1,17 +1,23 @@
 package Controllers;
 
+import Account.Accounts;
+import Account.Session;
 import Account.Users;
 import Data.SecuritiesData;
+import Routes.Routes;
 import Securities.SBNs;
 import Securities.Stocks;
 import Utils.MainUtils;
+import View.UserView;
 import com.sun.tools.javac.Main;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class UserController {
+    static Scanner scanner = new Scanner(System.in);
     public static List<String> getLimitedWatchlist(List<String> watchlist, int maxItems) {
         if (watchlist.size() > maxItems) {
             return new ArrayList<>(watchlist.subList(0, maxItems));
@@ -135,5 +141,149 @@ public class UserController {
             listSbn.add("                                                                  ||");
         }
         return listSbn;
+    }
+
+    public static void buyStockSbn(Users user){
+        boolean isStocks = false;
+        boolean isSbn = false;
+        boolean isLoop = false;
+        do {
+            MainUtils.clearScreen();
+            UserView.viewBuy(user);
+            if(isLoop == true){
+                System.out.println("||=====================================================================================||");
+                System.out.println("||                               KODE SAHAM/SBN SALAH                                  ||");
+                System.out.println("||=====================================================================================||");
+            }
+            System.out.print("|| Kode Saham / Sbn : ");
+            String stockCode = scanner.next();
+            for(Stocks stock : SecuritiesData.stocksList){
+                if (stock.getCode().equalsIgnoreCase(stockCode)) {
+                    isStocks = true;
+                    System.out.print("|| Jumlah Saham : ");
+                    int quantity = scanner.nextInt();
+                    double total = stock.getPrice() * quantity * 100;
+                    if (user.getBalance() >= total) {
+                        MainUtils.clearScreen();
+                        user.setBalance(user.getBalance() - total);
+                        user.addToPortfolio(stock, quantity, stock.getCurrentPrice());
+                        for(int i = 5; i >= 1; i--) {
+                            MainUtils.clearScreen();
+                            System.out.println("||=====================================================================================||");
+                            System.out.println("||                                                                                     ||");
+                            System.out.println("||                               TRANSAKSI BERHASIL                                    ||");
+                            System.out.println("||                                                                                     ||");
+                            System.out.println("||=====================================================================================||");
+                            System.out.println("|| Anda Membeli : " + stockCode + MainUtils.paddingText(69, stockCode) + "||");
+                            System.out.println("|| Jumlah : " + quantity + " LOT" + MainUtils.paddingText(71, String.valueOf(quantity)) + "||");
+                            System.out.println("|| Harga Per Lembar : Rp. " + MainUtils.formatRupiah((long) stock.getPrice()) + MainUtils.paddingText(61, MainUtils.formatRupiah((long) stock.getPrice())) + "||");
+                            System.out.println("|| Total Pembayaran : Rp. " + MainUtils.formatRupiah((long) total) + MainUtils.paddingText(61, MainUtils.formatRupiah((long) total)) + "||");
+                            System.out.println("||=====================================================================================||");
+                            System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                            System.out.println("||=====================================================================================||");
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Accounts loggedInAccount = Session.getCurrentUser();
+                        Routes.userRoutes((Users) loggedInAccount);
+                    }else{
+                        for(int i = 5; i >= 1; i--) {
+                            MainUtils.clearScreen();
+                            System.out.println("||=====================================================================================||");
+                            System.out.println("||                                                                                     ||");
+                            System.out.println("||                          TRANSAKSI GAGAL, SALDO TIDAK CUKUP                         ||");
+                            System.out.println("||                                                                                     ||");
+                            System.out.println("||=====================================================================================||");
+                            System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                            System.out.println("||=====================================================================================||");
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Accounts loggedInAccount = Session.getCurrentUser();
+                        Routes.userRoutes((Users) loggedInAccount);
+                    }
+                }
+            }
+            for(SBNs sbn : SecuritiesData.sbnsList){
+                if (sbn.getCode().equalsIgnoreCase(stockCode)) {
+                    isSbn = true;
+                    int quantity;
+                    System.out.print("|| Jumlah Sbn : ");
+                    quantity = scanner.nextInt();
+                    if (sbn.getNationalQuota() >= quantity) {
+                        double total = sbn.getPrice() * quantity;
+                        if (user.getBalance() >= total) {
+                            sbn.reduceQuota(quantity);
+                            user.setBalance(user.getBalance() - total);
+                            user.addToPortfolio(sbn, quantity, sbn.getPrice());
+                            for(int i = 5; i >= 1; i--) {
+                                MainUtils.clearScreen();
+                                System.out.println("||=====================================================================================||");
+                                System.out.println("||                                                                                     ||");
+                                System.out.println("||                               TRANSAKSI BERHASIL                                    ||");
+                                System.out.println("||                                                                                     ||");
+                                System.out.println("||=====================================================================================||");
+                                System.out.println("|| Anda Membeli : " + stockCode + MainUtils.paddingText(69, stockCode) + "||");
+                                System.out.println("|| Jumlah : " + quantity + " UNIT" + MainUtils.paddingText(70, String.valueOf(quantity)) + "||");
+                                System.out.println("|| Harga Per Unit : Rp. " + MainUtils.formatRupiah((long) sbn.getPrice()) + MainUtils.paddingText(63, MainUtils.formatRupiah((long) sbn.getPrice())) + "||");
+                                System.out.println("|| Total Pembayaran : Rp. " + MainUtils.formatRupiah((long) total) + MainUtils.paddingText(61, MainUtils.formatRupiah((long) total)) + "||");
+                                System.out.println("||=====================================================================================||");
+                                System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                                System.out.println("||=====================================================================================||");
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            Accounts loggedInAccount = Session.getCurrentUser();
+                            Routes.userRoutes((Users) loggedInAccount);
+                        }else{
+                            for(int i = 5; i >= 1; i--){
+                                System.out.println("||=====================================================================================||");
+                                System.out.println("||                                                                                     ||");
+                                System.out.println("||                          TRANSAKSI GAGAL, SALDO TIDAK CUKUP                         ||");
+                                System.out.println("||                                                                                     ||");
+                                System.out.println("||=====================================================================================||");
+                                System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM "+ i + MainUtils.paddingText(49, "i") +"||");
+                                System.out.println("||=====================================================================================||");
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            Accounts loggedInAccount = Session.getCurrentUser();
+                            Routes.userRoutes((Users) loggedInAccount);
+                        }
+                    } else{
+                        for(int i = 5; i >= 1; i--) {
+                            MainUtils.clearScreen();
+                            System.out.println("||=====================================================================================||");
+                            System.out.println("||                                                                                     ||");
+                            System.out.println("||                     TRANSAKSI GAGAL, MELEBIHI KUOTA NASIONAL                        ||");
+                            System.out.println("||                                                                                     ||");
+                            System.out.println("||=====================================================================================||");
+                            System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM "+ i + MainUtils.paddingText(49, "i") +"||");
+                            System.out.println("||=====================================================================================||");
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Accounts loggedInAccount = Session.getCurrentUser();
+                        Routes.userRoutes((Users) loggedInAccount);
+                    }
+                }
+            }
+            isLoop = true;
+        }while (isStocks == false && isSbn == false);
     }
 }

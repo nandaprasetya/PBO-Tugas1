@@ -1,5 +1,6 @@
 package Routes;
 
+import Account.Users;
 import Controllers.UserController;
 import Utils.MainUtils;
 import View.UserView;
@@ -7,7 +8,7 @@ import View.UserView;
 import java.util.Scanner;
 
 public class Routes {
-    public static void userRoutes(){
+    public static void userRoutes(Users user){
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
@@ -43,7 +44,7 @@ public class Routes {
                         }while(choice.equals("NEXT") || choice.equals("PREV"));
                     }
                 }
-                case "2" ->{
+                case "2" -> {
                     int page = 1;
                     UserView.viewListSbn(page);
                     UserView.lineInput();
@@ -68,6 +69,10 @@ public class Routes {
                             }
                         }while(choice.equals("NEXT") || choice.equals("PREV"));
                     }
+                }
+                case "3" -> {
+                    UserController.buyStockSbn(user);
+                    running = false;
                 }
                 case "0" -> {
                     running = false;
