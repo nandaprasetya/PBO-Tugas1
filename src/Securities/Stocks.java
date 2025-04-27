@@ -40,6 +40,6 @@ public class Stocks extends Securities{
     }
 
     public double getPriceChange() {
-        return price - getPreviousPrice();
+        return getCurrentPrice() - getPreviousPrice();
     }
 }
