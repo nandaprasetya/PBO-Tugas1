@@ -32,4 +32,10 @@ public class Stocks extends Securities{
         }
         return price;
     }
+
+    public String getPriceChangePercentage() {
+        if (getPreviousPrice() == 0) return "0";
+        double change = (getCurrentPrice() - getPreviousPrice()) / getPreviousPrice() * 100;
+        return String.format("%.2f%%", change);
+    }
 }
