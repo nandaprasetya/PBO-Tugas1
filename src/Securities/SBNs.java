@@ -15,4 +15,16 @@ public class SBNs extends Securities{
         this.durationInMonths = durationInMonths;
         this.maturityDate = maturityDate;
     }
+
+    public int getNationalQuota() {
+        return nationalQuota;
+    }
+
+    public double getInterestRate() {
+        return interestRate;
+    }
+
+    public LocalDate getMaturityDate() {
+        return maturityDate;
+    }
 }

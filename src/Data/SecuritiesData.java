@@ -192,4 +192,8 @@ public class SecuritiesData {
     public static ArrayList<Stocks> getStocksList() {
         return stocksList;
     }
+
+    public static ArrayList<SBNs> getSbnsList() {
+        return sbnsList;
+    }
 }

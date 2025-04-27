@@ -1,5 +1,8 @@
 package Utils;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+
 public class MainUtils {
     public static String paddingText(int length, String text){
         String padding = "";
@@ -16,4 +19,12 @@ public class MainUtils {
         }
     }
 
+    public static String formatRupiah(int number) {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator('.'); //
+
+        DecimalFormat formatter = new DecimalFormat("#,###", symbols);
+
+        return formatter.format(number);
+    }
 }

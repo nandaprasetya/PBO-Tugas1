@@ -91,7 +91,7 @@ public class UserView {
         String[] mainMenu = listMainMenu();
         List<String> contentListStock = UserController.getlistStocks();
 
-        String baseText = "HAI"+ getCurrentUser().getUsername() +", MAU CARI SAHAM APA HARI INI ?";
+        String baseText = "HAI "+ getCurrentUser().getUsername() +", MAU CARI SAHAM APA HARI INI ?";
         String fullLine = baseText + MainUtils.paddingText(66, baseText) + "||";
         int page = pageParam;
         if(page >= 1){
@@ -112,9 +112,9 @@ public class UserView {
                     }else if(i == 5){
                         System.out.print("==================================================================||");
                     }else if(i == 6){
-                        System.out.print(" NO. || KODE   || HARGA    || PERSENTASE         || SEKTOR        ||");
+                        System.out.print(" NO. || KODE   || HARGA      || PERSENTASE       || SEKTOR        ||");
                     }else {
-                        System.out.print("=====||========||==========||====================||===============||");
+                        System.out.print("=====||========||============||==================||===============||");
                     }
                 }else{
                     if (i < 16) {
@@ -123,7 +123,72 @@ public class UserView {
                     if (i == 16) {
                         System.out.print("==================================================================||");
                     } else if (i == 17) {
-                        System.out.print(" [NEXT] HALAMAN SELANJUTNYA | NOMBER UNTUK MAIN MENU              ||");
+                        if(page == 1){
+                            String lineText = " ["+ page + "/" + UserController.maxPageListStock() +"] [NEXT] SELANJUTNYA";
+                            System.out.print(lineText + MainUtils.paddingText(66, lineText) +"||");
+                        }else if(page == UserController.maxPageListStock()){
+                            String lineText = " ["+ page + "/" + UserController.maxPageListStock() +"] [PREV] SEBELUMNYA";
+                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                        }else{
+                            String lineText = " ["+ page + "/" + UserController.maxPageListStock() +"] [PREV] SEBELUMNYA | [NEXT] SELANJUTNYA";
+                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                        }
+                    } else if (i == 18) {
+                        System.out.print("==================================================================||");
+                    }
+                    j += 1;
+                }
+                System.out.println();
+            }
+        }
+    }
+
+    public static void viewListSbn(int pageParam) {
+        String[] mainMenu = listMainMenu();
+        List<String> contentListSbn = UserController.getListSbns();
+        String baseText = "HAI " + getCurrentUser().getUsername() + ", MAU CARI SBN APA HARI INI ?";
+        String fullLine = baseText + MainUtils.paddingText(66, baseText) + "||";
+        int page = pageParam;
+
+        if (page >= 1) {
+            int j = (page - 1) * 8;
+            for (int i = 0; i < mainMenu.length; i++) {
+                System.out.print(mainMenu[i]);
+                if (i <= 7) {
+                    if (i == 0) {
+                        System.out.print("==================================================================||");
+                    } else if (i == 1) {
+                        System.out.print(fullLine);
+                    } else if (i == 2) {
+                        System.out.print("                                                                  ||");
+                    } else if (i == 3) {
+                        System.out.print("==================================================================||");
+                    } else if (i == 4) {
+                        System.out.print(" LIST SBN :                                                       ||");
+                    } else if (i == 5) {
+                        System.out.print("==================================================================||");
+                    } else if (i == 6) {
+                        System.out.print(" NO. || KODE     || HARGA      || KUOTA  || BUNGA  || JATUH TEMPO ||");
+                    } else {
+                        System.out.print("=====||==========||============||========||========||=============||");
+                    }
+                } else {
+                    if (i < 16) {
+                        System.out.print(contentListSbn.get(j));
+                    }
+                    if (i == 16) {
+                        System.out.print("==================================================================||");
+                    } else if (i == 17) {
+                        if (page == 1) {
+                            String lineText = " [" + page + "/" + UserController.maxPageListSbn() + "] [NEXT] SELANJUTNYA";
+                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                        } else if (page == UserController.maxPageListSbn()) {
+                            String lineText = " [" + page + "/" + UserController.maxPageListSbn() + "] [PREV] SEBELUMNYA";
+                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                        } else {
+                            String lineText = " [" + page + "/" + UserController.maxPageListSbn() + "] [PREV] SEBELUMNYA | [NEXT] SELANJUTNYA";
+                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                        }
                     } else if (i == 18) {
                         System.out.print("==================================================================||");
                     }
