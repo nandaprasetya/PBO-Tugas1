@@ -1,5 +1,6 @@
 package View;
 
+import Account.Session;
 import Controllers.UserController;
 import Data.SecuritiesData;
 import Securities.Stocks;
@@ -205,6 +206,34 @@ public class UserView {
         System.out.println("||=====================================================================================||");
         System.out.println("|| Masukan Kode Saham / Sbn Dengan Benar                                               ||");
         System.out.println("||=====================================================================================||");
+    }
+
+    public static void viewBalance(Users user){
+        String[] mainMenu = listMainMenu();
+        List<String> contentBalance = new ArrayList<>();
+        contentBalance.add("==================================================================||");
+        contentBalance.add("                                                                  ||");
+        contentBalance.add(" HALLO "+ getCurrentUser().getUsername() + MainUtils.paddingText(76, String.valueOf(Session.getCurrentUser())) +"||");
+        contentBalance.add(" BERIKUT INFORMASI SALDO ANDA                                     ||");
+        contentBalance.add("                                                                  ||");
+        contentBalance.add("==================================================================||");
+        contentBalance.add("                                                                  ||");
+        contentBalance.add(" SALDO ANDA : Rp. "+ MainUtils.formatRupiah((long) user.getBalance()) + MainUtils.paddingText(48, MainUtils.formatRupiah((long) user.getBalance())) +"||");
+        contentBalance.add("                                                                  ||");
+        contentBalance.add("==================================================================||");
+        contentBalance.add("                                                                  ||");
+        contentBalance.add(" NILAI INVESTASI SAHAM : Rp. "+ MainUtils.formatRupiah(UserController.getStockBalance()) + MainUtils.paddingText(37, MainUtils.formatRupiah(UserController.getStockBalance())) +"||");
+        contentBalance.add(" NILAI INVESTASI SBN   : Rp. "+ MainUtils.formatRupiah(UserController.getSbnBalance(user)) + MainUtils.paddingText(37, MainUtils.formatRupiah(UserController.getSbnBalance(user))) +"||");
+        contentBalance.add("                                                                  ||");
+        contentBalance.add("==================================================================||");
+        contentBalance.add("                                                                  ||");
+        contentBalance.add("             [11] TAMBAH SALDO   |   [12] TARIK SALDO             ||");
+        contentBalance.add("                                                                  ||");
+        contentBalance.add("==================================================================||");
+
+        for(int i = 0; i < mainMenu.length; i++){
+            System.out.println(mainMenu[i] + contentBalance.get(i));
+        }
     }
 
     public static void showUserMenu(){

@@ -35,4 +35,9 @@ public class SBNs extends Securities{
         }
         return false;
     }
+
+    public double simulateProfit(double interestRate, double amountInvested, int totalMonths) {
+        double monthlyCoupon = ((interestRate / 100 / 12) * price) * 0.9 * amountInvested;
+        return monthlyCoupon * totalMonths;
+    }
 }

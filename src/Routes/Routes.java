@@ -72,7 +72,17 @@ public class Routes {
                 }
                 case "3" -> {
                     UserController.buyStockSbn(user);
-                    running = false;
+                }
+                case "4" -> {
+                    UserView.viewBalance(user);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                    if(choice.equals("11")){
+                        UserController.topUpBalance(user);
+                    }else if(choice.equals("12")){
+                        UserController.withdraw(user);
+                    }
+//                    running = false;
                 }
                 case "0" -> {
                     running = false;

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Users extends Accounts{
     private double balance;
-    private ArrayList<PortfolioItem> portfolio;
+    private static ArrayList<PortfolioItem> portfolio;
     private static List<String> watchlist = new ArrayList<>();
 
     public Users(String id, String username, String password, String email, String role, double balance, ArrayList<PortfolioItem> portfolio) {
@@ -29,6 +29,15 @@ public class Users extends Accounts{
         this.balance = balance;
     }
 
+    public boolean withdrawBalance(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void addToPortfolio(Securities securities, int quantity, double price) {
         for (PortfolioItem item : portfolio) {
             if (item.getSecurities().getCode().equals(securities.getCode())) {
@@ -37,5 +46,15 @@ public class Users extends Accounts{
             }
         }
         this.portfolio.add(new PortfolioItem(securities, quantity, price));
+    }
+
+    public static ArrayList<PortfolioItem> getPortfolio() {
+        return portfolio;
+    }
+
+    public void addBalance(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        }
     }
 }
