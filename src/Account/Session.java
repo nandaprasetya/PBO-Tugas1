@@ -1,4 +1,4 @@
-package account;
+package Account;
 
 public class Session {
     private static Accounts currentUser;

@@ -1,4 +1,4 @@
-package account;
+package Account;
 
 
 import java.util.ArrayList;
@@ -8,7 +8,9 @@ public class Login {
     private List<Accounts> users = new ArrayList<>();
 
     public Login() {
-        users.add(new Users("US1", "Nanda Prasetya", "pass123", "nanda@unud.ac.id", "USER", 10000.0));
+        Users nanda = new Users("US1", "Nanda", "pass123", "nanda@unud.ac.id", "USER", 10000000000.0);
+        nanda.getWatchlist().addAll(List.of("BBCA", "PWON", "BBRI", "BSDE", "JSMR", "PTPP", "BMRI", "SMGR", "WIKA"));
+        users.add(nanda);
         users.add(new Admin("ADM1", "Admin Devi", "admin123", "devi@unud.ac.id","ADMIN"));
     }
 

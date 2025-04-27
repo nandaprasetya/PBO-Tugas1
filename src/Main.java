@@ -1,9 +1,8 @@
 import Routes.Routes;
-import account.Login;
-import account.Accounts;
-import account.Session;
-import account.Users;
-import View.UserView;
+import Account.Login;
+import Account.Accounts;
+import Account.Session;
+import Account.Users;
 
 import java.util.Scanner;
 
