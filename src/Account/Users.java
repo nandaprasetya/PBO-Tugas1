@@ -1,6 +1,6 @@
 package Account;
 
-import Portofolio.PortfolioItem;
+import Portfolio.PortfolioItem;
 import Securities.Securities;
 
 import java.util.ArrayList;

@@ -4,7 +4,7 @@ import Account.Accounts;
 import Account.Session;
 import Account.Users;
 import Data.SecuritiesData;
-import Portofolio.PortfolioItem;
+import Portfolio.PortfolioItem;
 import Routes.Routes;
 import Securities.SBNs;
 import Securities.Securities;
