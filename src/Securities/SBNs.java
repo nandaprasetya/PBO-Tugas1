@@ -27,4 +27,17 @@ public class SBNs extends Securities{
     public LocalDate getMaturityDate() {
         return maturityDate;
     }
+
+    public boolean reduceQuota(int amount) {
+        if (amount <= nationalQuota) {
+            nationalQuota -= amount;
+            return true;
+        }
+        return false;
+    }
+
+    public double simulateProfit(double interestRate, double amountInvested, int totalMonths) {
+        double monthlyCoupon = ((interestRate / 100 / 12) * price) * 0.9 * amountInvested;
+        return monthlyCoupon * totalMonths;
+    }
 }

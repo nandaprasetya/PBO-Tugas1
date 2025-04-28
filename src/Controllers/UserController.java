@@ -1,17 +1,28 @@
 package Controllers;
 
+import Account.Accounts;
+import Account.Session;
 import Account.Users;
 import Data.SecuritiesData;
+import Portofolio.PortfolioItem;
+import Routes.Routes;
 import Securities.SBNs;
+import Securities.Securities;
 import Securities.Stocks;
 import Utils.MainUtils;
+import View.UserView;
 import com.sun.tools.javac.Main;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
+import static Account.Session.getCurrentUser;
 
 public class UserController {
+    static Scanner scanner = new Scanner(System.in);
     public static List<String> getLimitedWatchlist(List<String> watchlist, int maxItems) {
         if (watchlist.size() > maxItems) {
             return new ArrayList<>(watchlist.subList(0, maxItems));
@@ -107,9 +118,51 @@ public class UserController {
     }
 
     public static int maxPageListSbn(){
-        List<String> contentListStock = UserController.getListSbns();
+        List<String> listSbn = UserController.getListSbns();
 
-        return contentListStock.size() / 8;
+        return listSbn.size() / 8;
+    }
+
+    public static int maxPageListSbnPorto(Users user){
+        List<SBNs> listSbn = SecuritiesData.getSbnsList();
+        ArrayList<PortfolioItem> sbnPorto = Users.getPortfolio();
+        int portoCount = 0;
+        for (SBNs sbn : listSbn) {
+            for(PortfolioItem porto : sbnPorto){
+                if(sbn.getCode().equalsIgnoreCase(porto.getSecurities().getCode())){
+                    portoCount++;
+                }
+            }
+        }
+        double calculatePage = (double) portoCount / 8;
+        int totalpage = 0;
+        if(calculatePage > 0.0 && calculatePage < 1.0){
+            totalpage = 1;
+        }else if(calculatePage > 1.0){
+            totalpage = (int) Math.ceil(calculatePage);
+        }
+        return totalpage;
+    }
+
+    public static int maxPageListStockPorto(Users user){
+        List<Stocks> listStock = SecuritiesData.getStocksList();
+        ArrayList<PortfolioItem> sbnPorto = Users.getPortfolio();
+        int portoCount = 0;
+        for (Stocks stock : listStock) {
+            for(PortfolioItem porto : sbnPorto){
+                if(stock.getCode().equalsIgnoreCase(porto.getSecurities().getCode())){
+                    portoCount++;
+                }
+            }
+        }
+        double calculatePage = (double) portoCount / 8;
+        int totalpage = 0;
+        if(calculatePage > 0.0 && calculatePage < 1.0){
+            totalpage = 1;
+        }else if(calculatePage > 1.0){
+            totalpage = (int) Math.ceil(calculatePage);
+        }
+        return totalpage;
     }
 
     public static List<String> getListSbns(){
@@ -135,5 +188,380 @@ public class UserController {
             listSbn.add("                                                                  ||");
         }
         return listSbn;
+    }
+
+    public static void buyStockSbn(Users user){
+        boolean isStocks = false;
+        boolean isSbn = false;
+        boolean isLoop = false;
+        do {
+            MainUtils.clearScreen();
+            UserView.viewBuy(user);
+            if(isLoop == true){
+                System.out.println("||=====================================================================================||");
+                System.out.println("||                               KODE SAHAM/SBN SALAH                                  ||");
+                System.out.println("||=====================================================================================||");
+            }
+            System.out.print("|| Kode Saham / Sbn : ");
+            String stockCode = scanner.next();
+            for(Stocks stock : SecuritiesData.stocksList){
+                if (stock.getCode().equalsIgnoreCase(stockCode)) {
+                    isStocks = true;
+                    System.out.print("|| Jumlah Saham : ");
+                    int quantity = scanner.nextInt();
+                    double total = stock.getCurrentPrice() * quantity * 100;
+                    if (user.getBalance() >= total) {
+                        MainUtils.clearScreen();
+                        user.setBalance(user.getBalance() - total);
+                        user.addToPortfolio(stock, quantity, stock.getCurrentPrice());
+                        for(int i = 5; i >= 1; i--) {
+                            MainUtils.clearScreen();
+                            System.out.println("||=====================================================================================||");
+                            System.out.println("||                                                                                     ||");
+                            System.out.println("||                               TRANSAKSI BERHASIL                                    ||");
+                            System.out.println("||                                                                                     ||");
+                            System.out.println("||=====================================================================================||");
+                            System.out.println("|| Anda Membeli : " + stockCode + MainUtils.paddingText(69, stockCode) + "||");
+                            System.out.println("|| Jumlah : " + quantity + " LOT" + MainUtils.paddingText(71, String.valueOf(quantity)) + "||");
+                            System.out.println("|| Harga Per Lembar : Rp. " + MainUtils.formatRupiah((long) stock.getCurrentPrice()) + MainUtils.paddingText(61, MainUtils.formatRupiah((long) stock.getCurrentPrice())) + "||");
+                            System.out.println("|| Total Pembayaran : Rp. " + MainUtils.formatRupiah((long) total) + MainUtils.paddingText(61, MainUtils.formatRupiah((long) total)) + "||");
+                            System.out.println("||=====================================================================================||");
+                            System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                            System.out.println("||=====================================================================================||");
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Accounts loggedInAccount = Session.getCurrentUser();
+                        Routes.userRoutes((Users) loggedInAccount);
+                    }else{
+                        for(int i = 5; i >= 1; i--) {
+                            MainUtils.clearScreen();
+                            System.out.println("||=====================================================================================||");
+                            System.out.println("||                                                                                     ||");
+                            System.out.println("||                          TRANSAKSI GAGAL, SALDO TIDAK CUKUP                         ||");
+                            System.out.println("||                                                                                     ||");
+                            System.out.println("||=====================================================================================||");
+                            System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                            System.out.println("||=====================================================================================||");
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Accounts loggedInAccount = Session.getCurrentUser();
+                        Routes.userRoutes((Users) loggedInAccount);
+                    }
+                }
+            }
+            for(SBNs sbn : SecuritiesData.sbnsList){
+                if (sbn.getCode().equalsIgnoreCase(stockCode)) {
+                    isSbn = true;
+                    int quantity;
+                    System.out.print("|| Jumlah Sbn : ");
+                    quantity = scanner.nextInt();
+                    if (sbn.getNationalQuota() >= quantity) {
+                        double total = sbn.getPrice() * quantity;
+                        if (user.getBalance() >= total) {
+                            sbn.reduceQuota(quantity);
+                            user.setBalance(user.getBalance() - total);
+                            user.addToPortfolio(sbn, quantity, sbn.getPrice());
+                            for(int i = 5; i >= 1; i--) {
+                                MainUtils.clearScreen();
+                                System.out.println("||=====================================================================================||");
+                                System.out.println("||                                                                                     ||");
+                                System.out.println("||                               TRANSAKSI BERHASIL                                    ||");
+                                System.out.println("||                                                                                     ||");
+                                System.out.println("||=====================================================================================||");
+                                System.out.println("|| Anda Membeli : " + stockCode + MainUtils.paddingText(69, stockCode) + "||");
+                                System.out.println("|| Jumlah : " + quantity + " UNIT" + MainUtils.paddingText(70, String.valueOf(quantity)) + "||");
+                                System.out.println("|| Harga Per Unit : Rp. " + MainUtils.formatRupiah((long) sbn.getPrice()) + MainUtils.paddingText(63, MainUtils.formatRupiah((long) sbn.getPrice())) + "||");
+                                System.out.println("|| Total Pembayaran : Rp. " + MainUtils.formatRupiah((long) total) + MainUtils.paddingText(61, MainUtils.formatRupiah((long) total)) + "||");
+                                System.out.println("||=====================================================================================||");
+                                System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                                System.out.println("||=====================================================================================||");
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            Accounts loggedInAccount = Session.getCurrentUser();
+                            Routes.userRoutes((Users) loggedInAccount);
+                        }else{
+                            for(int i = 5; i >= 1; i--){
+                                System.out.println("||=====================================================================================||");
+                                System.out.println("||                                                                                     ||");
+                                System.out.println("||                          TRANSAKSI GAGAL, SALDO TIDAK CUKUP                         ||");
+                                System.out.println("||                                                                                     ||");
+                                System.out.println("||=====================================================================================||");
+                                System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM "+ i + MainUtils.paddingText(49, "i") +"||");
+                                System.out.println("||=====================================================================================||");
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            Accounts loggedInAccount = Session.getCurrentUser();
+                            Routes.userRoutes((Users) loggedInAccount);
+                        }
+                    } else{
+                        for(int i = 5; i >= 1; i--) {
+                            MainUtils.clearScreen();
+                            System.out.println("||=====================================================================================||");
+                            System.out.println("||                                                                                     ||");
+                            System.out.println("||                     TRANSAKSI GAGAL, MELEBIHI KUOTA NASIONAL                        ||");
+                            System.out.println("||                                                                                     ||");
+                            System.out.println("||=====================================================================================||");
+                            System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM "+ i + MainUtils.paddingText(49, "i") +"||");
+                            System.out.println("||=====================================================================================||");
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Accounts loggedInAccount = Session.getCurrentUser();
+                        Routes.userRoutes((Users) loggedInAccount);
+                    }
+                }
+            }
+            isLoop = true;
+        }while (!isStocks && isSbn == false);
+    }
+
+    public static int getStockBalance(){
+        int totalStockBalance = 0;
+        for(Stocks stock : SecuritiesData.getStocksList()){
+            for(PortfolioItem porto : Users.getPortfolio()){
+                if(porto.getSecurities().getCode().equalsIgnoreCase(stock.getCode())){
+                    totalStockBalance += (int) (stock.getCurrentPrice() * porto.getQuantity() * 100);
+                }
+            }
+        }
+        return totalStockBalance;
+    }
+
+    public static int getSbnBalance(Users user){
+        int totalSbnBalance = 0;
+        for(SBNs sbn : SecuritiesData.getSbnsList()){
+            for(PortfolioItem porto : user.getPortfolio()){
+                if(porto.getSecurities().getCode().equalsIgnoreCase(sbn.getCode())){
+                    Period period = Period.between(LocalDate.now(), sbn.getMaturityDate());
+                    int totalMonths = period.getYears() * 12 + period.getMonths();
+                    int totalInvest = (int) sbn.simulateProfit(sbn.getInterestRate(), 1, totalMonths);
+                    totalSbnBalance += (int) (sbn.getPrice() * porto.getQuantity()) + totalInvest;
+                }
+            }
+        }
+        return totalSbnBalance;
+    }
+
+    public static void topUpBalance(Users user) {
+        System.out.println("||=====================================================================================||");
+        System.out.println("|| HALLO" + getCurrentUser().getUsername() + ", AYO TOP UP UNTUK INVESTASI" + MainUtils.paddingText(51, getCurrentUser().getUsername()) + "||");
+        System.out.println("||=====================================================================================||");
+        System.out.println("|| SETIAP TOPUP MAKSIMAL Rp. 10.000.000.000                                            ||");
+        System.out.println("||=====================================================================================||");
+        System.out.print("|| Masukan Nominal : Rp. ");
+        double amount = scanner.nextDouble();
+        if (amount > 10000000000.0) {
+            for (int i = 5; i >= 1; i--) {
+                MainUtils.clearScreen();
+                System.out.println("||=====================================================================================||");
+                System.out.println("||                                                                                     ||");
+                System.out.println("||                        TOPUP GAGAL, MELEBIHI BATAS MAKSIMAL                         ||");
+                System.out.println("||                                                                                     ||");
+                System.out.println("||=====================================================================================||");
+                System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                System.out.println("||=====================================================================================||");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Accounts loggedInAccount = Session.getCurrentUser();
+            Routes.userRoutes((Users) loggedInAccount);
+        } else {
+            if(amount > 0){
+                user.addBalance(amount);
+                for (int i = 5; i >= 1; i--) {
+                    MainUtils.clearScreen();
+                    System.out.println("||=====================================================================================||");
+                    System.out.println("||                                                                                     ||");
+                    System.out.println("||                        TOPUP BERHASIL, AYO MULAI INVESTASI                          ||");
+                    System.out.println("||                                                                                     ||");
+                    System.out.println("||=====================================================================================||");
+                    System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                    System.out.println("||=====================================================================================||");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Accounts loggedInAccount = Session.getCurrentUser();
+                Routes.userRoutes((Users) loggedInAccount);
+            }else{
+                for (int i = 5; i >= 1; i--) {
+                    MainUtils.clearScreen();
+                    System.out.println("||=====================================================================================||");
+                    System.out.println("||                                                                                     ||");
+                    System.out.println("||                        TOPUP GAGAL NOMINAL TIDAK BOLEH NOL                          ||");
+                    System.out.println("||                                                                                     ||");
+                    System.out.println("||=====================================================================================||");
+                    System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                    System.out.println("||=====================================================================================||");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Accounts loggedInAccount = Session.getCurrentUser();
+                Routes.userRoutes((Users) loggedInAccount);
+            }
+        }
+    }
+
+    public static void withdraw(Users user){
+        System.out.println("||=====================================================================================||");
+        System.out.println("|| HALLO" + getCurrentUser().getUsername() + ", AYO TOP UP UNTUK INVESTASI" + MainUtils.paddingText(51, getCurrentUser().getUsername()) + "||");
+        System.out.println("||=====================================================================================||");
+        System.out.println("|| SETIAP PENARIKAN MAKSIMAL Rp. 10.000.000.000                                        ||");
+        System.out.println("||=====================================================================================||");
+        System.out.print("|| Masukan Nominal : Rp. ");
+        double amount = scanner.nextDouble();
+        if (amount > 10000000000.0) {
+            for (int i = 5; i >= 1; i--) {
+                MainUtils.clearScreen();
+                System.out.println("||=====================================================================================||");
+                System.out.println("||                                                                                     ||");
+                System.out.println("||                    PENARIKAN GAGAL, MELEBIHI BATAS MAKSIMAL                         ||");
+                System.out.println("||                                                                                     ||");
+                System.out.println("||=====================================================================================||");
+                System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                System.out.println("||=====================================================================================||");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Accounts loggedInAccount = Session.getCurrentUser();
+            Routes.userRoutes((Users) loggedInAccount);
+        } else {
+            if(amount > 0){
+                user.withdrawBalance(amount);
+                for (int i = 5; i >= 1; i--) {
+                    MainUtils.clearScreen();
+                    System.out.println("||=====================================================================================||");
+                    System.out.println("||                                                                                     ||");
+                    System.out.println("||                    PENARIKAN BERHASIL, AYO MULAI INVESTASI                          ||");
+                    System.out.println("||                                                                                     ||");
+                    System.out.println("||=====================================================================================||");
+                    System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                    System.out.println("||=====================================================================================||");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Accounts loggedInAccount = Session.getCurrentUser();
+                Routes.userRoutes((Users) loggedInAccount);
+            }else{
+                for (int i = 5; i >= 1; i--) {
+                    MainUtils.clearScreen();
+                    System.out.println("||=====================================================================================||");
+                    System.out.println("||                                                                                     ||");
+                    System.out.println("||                    PENARIKAN GAGAL NOMINAL TIDAK BOLEH NOL                          ||");
+                    System.out.println("||                                                                                     ||");
+                    System.out.println("||=====================================================================================||");
+                    System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                    System.out.println("||=====================================================================================||");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Accounts loggedInAccount = Session.getCurrentUser();
+                Routes.userRoutes((Users) loggedInAccount);
+            }
+        }
+    }
+
+    public static List<String> listSbnPortofolio(Users user) {
+        ArrayList<PortfolioItem> items = Users.getPortfolio();
+        List<String> listSbn = new ArrayList<>();
+        if (items.isEmpty()) {
+            listSbn.add("                       PORTOFOLIO KOSONG                          ||");
+            listSbn.add("                         AYO BELI SBN                             ||");
+            listSbn.add("                                                                  ||");
+            listSbn.add("                                                                  ||");
+            listSbn.add("                                                                  ||");
+            listSbn.add("                                                                  ||");
+            listSbn.add("                                                                  ||");
+            listSbn.add("                                                                  ||");
+        } else {
+            int no = 1;
+            for (PortfolioItem item : items) {
+                if (item.getSecurities() instanceof SBNs sbn) {
+                    String monthInterest = String.valueOf( (int) (((sbn.getInterestRate() / 12) / 100 * (item.getQuantity() * item.getPurchasePrice())) * 0.9));
+                    int quantity = item.getQuantity();
+                    String stocksText = "  " + no + MainUtils.paddingText(3, String.valueOf(no)) +"|| " + item.getSecurities().getCode() + " || " + monthInterest + MainUtils.paddingText(12, monthInterest) + "|| " + quantity + MainUtils.paddingText(8, String.valueOf(quantity)) + "|| " + sbn.getInterestRate() + "%" + MainUtils.paddingText(6, String.valueOf(sbn.getInterestRate())) + "|| " + sbn.getMaturityDate() + "  ||";
+                    listSbn.add(stocksText);
+                }
+                no++;
+            }
+            int blankSpace = 8 - (listSbn.size() % 8);
+            for (int i = 0; i <= blankSpace; i++) {
+                listSbn.add("                                                                  ||");
+            }
+        }
+        return (listSbn);
+    }
+
+    public static List<String> listStockPortofolio(Users user){
+        ArrayList<PortfolioItem> items = user.getPortfolio();
+        List<String> listStock = new ArrayList<>();
+        if (items.isEmpty()) {
+            listStock.add("                       PORTOFOLIO KOSONG                          ||");
+            listStock.add("                        AYO BELI SAHAM                            ||");
+            listStock.add("                                                                  ||");
+            listStock.add("                                                                  ||");
+            listStock.add("                                                                  ||");
+            listStock.add("                                                                  ||");
+            listStock.add("                                                                  ||");
+            listStock.add("                                                                  ||");
+        } else {
+            int no = 1;
+            for (PortfolioItem item : items) {
+                if (item.getSecurities() instanceof Stocks stock) {
+                    ArrayList<Double> history = stock.getPriceHistory();
+                    double latestPrice = history.isEmpty() ? stock.getPrice() : history.getLast();
+                    String stockCapital = MainUtils.formatRupiah((long) item.getPurchasePrice() * 100 * item.getQuantity());
+                    String paddingStockCapital = MainUtils.paddingText(14, stockCapital);
+                    String currentStockValue = MainUtils.formatRupiah((long) (item.getQuantity() * 100 * history.getLast()));
+                    String paddingCurrentStockValue = MainUtils.paddingText(16, currentStockValue);
+                    int quatity = item.getQuantity() * 100;
+                    String paddingQuantity = MainUtils.paddingText(13, String.valueOf(quatity));
+                    String stocksText = " " + no + MainUtils.paddingText(3, String.valueOf(no)) + "|| " + item.getSecurities().getCode() + "   || " + stockCapital + paddingStockCapital + "|| " + currentStockValue + paddingCurrentStockValue + "|| " + quatity + paddingQuantity + "||";
+                    listStock.add(stocksText);
+                    no++;
+                }
+            }
+            int blankSpace = 8 - (listStock.size() % 8);
+            for (int i = 0; i <= blankSpace; i++) {
+                listStock.add("                                                                  ||");
+            }
+        }
+        return(listStock);
     }
 }

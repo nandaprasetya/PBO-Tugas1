@@ -19,7 +19,7 @@ public class MainUtils {
         }
     }
 
-    public static String formatRupiah(int number) {
+    public static String formatRupiah(long number) {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
         symbols.setGroupingSeparator('.'); //
 
