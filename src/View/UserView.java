@@ -364,15 +364,6 @@ public class UserView {
         System.out.println("||                                                                                     ||");
         System.out.println("||                          TAMBAH DAN HAPUS WATCHLIST                                 ||");
         System.out.println("||                                                                                     ||");
-        System.out.println("|| PERATURAN :                                                                         ||");
-        System.out.println("||                                                                                     ||");
-        System.out.println("||                                                                                     ||");
-        System.out.println("|| 1. INPUT KODE SAHAM UNTUK MEMASUKAN SAHAM PADA WATCHLIST                            ||");
-        System.out.println("|| 2. JIKA SUDAH MEMASUKAN SAHAM KE WATCHLIST DAN INPUT NAMA SAHAM LAGI AKAN           ||");
-        System.out.println("||    MENGHAPUS SAHAM DARI WATCHLIST                                                   ||");
-        System.out.println("|| 3. HANYA SAHAM YANG DAPAT DIMASUKAN PADA WATCHLIST, SBN TIDAK BISA                  ||");
-        System.out.println("|| 4. WATCHLIST HANYA MAKSIMAL 8 SAHAM                                                 ||");
-        System.out.println("||                                                                                     ||");
         System.out.println("||=====================================================================================||");
     }
 
@@ -400,8 +391,8 @@ public class UserView {
         System.out.println("||     PORTOFOLIO  || 4   || PANI   || 10000    || +900+(9.89%)       || PROPERTY      ||");
         System.out.println("|| [8] SIMULASI    || 5   || WIFI   || 1800     || +10(+0.56%)        || TECHNOLOGY    ||");
         System.out.println("||     SBN         || 6   || CBDK   || 5950     || +875(+17.24%)      || INFRASTRUC    ||");
-        System.out.println("|| [0] LOGOUT      || 7   || ASII   || 4920     || +120(+2.50%)       || INDUSTRIAL    ||");
-        System.out.println("||                 || 8   || BBNI   || 4240     || -10(-0.24%)        || FINANCE       ||");
+        System.out.println("|| [9] JUAL SAHAM  || 7   || ASII   || 4920     || +120(+2.50%)       || INDUSTRIAL    ||");
+        System.out.println("|| [0] LOGOUT      || 8   || BBNI   || 4240     || -10(-0.24%)        || FINANCE       ||");
         System.out.println("||                 ||==================================================================||");
         System.out.println("||                 ||     INPUT NO UNTUK MELIHAT MAIN MENU & KODE SAHAM UNTUK DETAIL   ||");
         System.out.println("||=================||==================================================================||");
