@@ -144,6 +144,27 @@ public class UserController {
         return totalpage;
     }
 
+    public static int maxPageListStockPorto(Users user){
+        List<Stocks> listStock = SecuritiesData.getStocksList();
+        ArrayList<PortfolioItem> sbnPorto = Users.getPortfolio();
+        int portoCount = 0;
+        for (Stocks stock : listStock) {
+            for(PortfolioItem porto : sbnPorto){
+                if(stock.getCode().equalsIgnoreCase(porto.getSecurities().getCode())){
+                    portoCount++;
+                }
+            }
+        }
+        double calculatePage = (double) portoCount / 8;
+        int totalpage = 0;
+        if(calculatePage > 0.0 && calculatePage < 1.0){
+            totalpage = 1;
+        }else if(calculatePage > 1.0){
+            totalpage = (int) Math.ceil(calculatePage);
+        }
+        return totalpage;
+    }
+
     public static List<String> getListSbns(){
         List<String> listSbn = new ArrayList<>();
         int noSbn = 1;
@@ -505,5 +526,42 @@ public class UserController {
             }
         }
         return (listSbn);
+    }
+
+    public static List<String> listStockPortofolio(Users user){
+        ArrayList<PortfolioItem> items = user.getPortfolio();
+        List<String> listStock = new ArrayList<>();
+        if (items.isEmpty()) {
+            listStock.add("                       PORTOFOLIO KOSONG                          ||");
+            listStock.add("                        AYO BELI SAHAM                            ||");
+            listStock.add("                                                                  ||");
+            listStock.add("                                                                  ||");
+            listStock.add("                                                                  ||");
+            listStock.add("                                                                  ||");
+            listStock.add("                                                                  ||");
+            listStock.add("                                                                  ||");
+        } else {
+            int no = 1;
+            for (PortfolioItem item : items) {
+                if (item.getSecurities() instanceof Stocks stock) {
+                    ArrayList<Double> history = stock.getPriceHistory();
+                    double latestPrice = history.isEmpty() ? stock.getPrice() : history.getLast();
+                    String stockCapital = MainUtils.formatRupiah((long) item.getPurchasePrice() * 100 * item.getQuantity());
+                    String paddingStockCapital = MainUtils.paddingText(14, stockCapital);
+                    String currentStockValue = MainUtils.formatRupiah((long) (item.getQuantity() * 100 * history.getLast()));
+                    String paddingCurrentStockValue = MainUtils.paddingText(16, currentStockValue);
+                    int quatity = item.getQuantity() * 100;
+                    String paddingQuantity = MainUtils.paddingText(13, String.valueOf(quatity));
+                    String stocksText = " " + no + MainUtils.paddingText(3, String.valueOf(no)) + "|| " + item.getSecurities().getCode() + "   || " + stockCapital + paddingStockCapital + "|| " + currentStockValue + paddingCurrentStockValue + "|| " + quatity + paddingQuantity + "||";
+                    listStock.add(stocksText);
+                    no++;
+                }
+            }
+            int blankSpace = 8 - (listStock.size() % 8);
+            for (int i = 0; i <= blankSpace; i++) {
+                listStock.add("                                                                  ||");
+            }
+        }
+        return(listStock);
     }
 }
