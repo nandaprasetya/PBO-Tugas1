@@ -592,8 +592,20 @@ public class UserController {
                 contentSimulationSbn.add("==================================================================||");
                 contentSimulationSbn.add("                  INPUT KODE SBN UNTUK SIMULASI                   ||");
                 contentSimulationSbn.add("==================================================================||");
+                return contentSimulationSbn;
             }
         }
+
+        contentSimulationSbn.add("                                                                  ||");
+        contentSimulationSbn.add("==================================================================||");
+        contentSimulationSbn.add("                                                                  ||");
+        contentSimulationSbn.add("                KODE SEBELUMNYA BUKANLAH KODE SBN                 ||");
+        for(int i = 0; i < 10; i++){
+            contentSimulationSbn.add("                                                                  ||");
+        }
+        contentSimulationSbn.add("==================================================================||");
+        contentSimulationSbn.add("             MASUKAN KODE SESUAI DENGAN SBN YANG ADA              ||");
+        contentSimulationSbn.add("==================================================================||");
         return contentSimulationSbn;
     }
 }

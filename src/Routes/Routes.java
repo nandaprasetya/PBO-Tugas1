@@ -18,7 +18,7 @@ public class Routes {
         UserView.userMainMenu();
         UserView.lineInput();
         String choice = scanner.nextLine();
-        while (running) {
+        do {
             MainUtils.clearScreen();
             switch (choice){
                 case "1" -> {
@@ -145,14 +145,23 @@ public class Routes {
                     UserView.lineInput();
                     choice = scanner.nextLine();
                     if(!choice.matches("[0-9]")){
-                        UserView.viewSimulationSbn(choice);
-                        running = false;
+                        do{
+                            MainUtils.clearScreen();
+                            UserView.viewSimulationSbn(choice);
+                            UserView.lineInput();
+                            choice = scanner.nextLine();
+                        } while(!choice.matches("[0-9]"));
                     }
                 }
                 case "0" -> {
                     running = false;
                 }
+                default -> {
+                    UserView.userMainMenu();
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                }
             }
-        }
+        }while(!choice.equals("0"));
     }
 }
