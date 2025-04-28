@@ -529,7 +529,7 @@ public class UserController {
     }
 
     public static List<String> listStockPortofolio(Users user){
-        ArrayList<PortfolioItem> items = user.getPortfolio();
+        ArrayList<PortfolioItem> items = Users.getPortfolio();
         List<String> listStock = new ArrayList<>();
         if (items.isEmpty()) {
             listStock.add("                       PORTOFOLIO KOSONG                          ||");
@@ -563,5 +563,37 @@ public class UserController {
             }
         }
         return(listStock);
+    }
+
+    public static List<String> SimulationSbn(String code){
+        List<String> contentSimulationSbn = new ArrayList<>();
+        contentSimulationSbn.add("==================================================================||");
+        contentSimulationSbn.add(" HALLO, " + getCurrentUser().getUsername() + MainUtils.paddingText(58, getCurrentUser().getUsername()) + "||");
+        for(SBNs sbn: SecuritiesData.getSbnsList()){
+            if(sbn.getCode().equalsIgnoreCase(code)){
+                int sbnrate = (int) (((sbn.getInterestRate() / 12) / 100 * sbn.getPrice()) * 0.9);
+                Period period = Period.between(LocalDate.now(), sbn.getMaturityDate());
+                int totalMonths = period.getYears() * 12 + period.getMonths();
+                int totalInvest = (int) sbn.simulateProfit(sbn.getInterestRate(), 1, totalMonths);
+                contentSimulationSbn.add("                                                                  ||");
+                contentSimulationSbn.add("==================================================================||");
+                contentSimulationSbn.add(" HASIL SIMULASI SBN : " + code + MainUtils.paddingText(44, code) + "||");
+                contentSimulationSbn.add("==================================================================||");
+                contentSimulationSbn.add(" BUNGA/TAHUN : " + sbn.getInterestRate() + "%" + MainUtils.paddingText(50, String.valueOf(sbn.getInterestRate())) + "||");
+                contentSimulationSbn.add(" BUNGA/PERBULAN : " + String.format("%.2f", sbn.getInterestRate() / 12) + "%" + MainUtils.paddingText(47, String.format("%.2f", sbn.getInterestRate() / 12)) + "||");
+                contentSimulationSbn.add("------------------------------------------------------------------||");
+                contentSimulationSbn.add(" HARGA : Rp. " + MainUtils.formatRupiah( (int) sbn.getPrice()) + MainUtils.paddingText(53, String.valueOf(sbn.getPrice())) + "||");
+                contentSimulationSbn.add("------------------------------------------------------------------||");
+                contentSimulationSbn.add(" JATUH TEMPO : " + sbn.getMaturityDate() + MainUtils.paddingText(51, String.valueOf(sbn.getMaturityDate())) + "||");
+                contentSimulationSbn.add("------------------------------------------------------------------||");
+                contentSimulationSbn.add(" KUPON PER-BULAN (1 UNIT) : Rp. " + MainUtils.formatRupiah(sbnrate) + MainUtils.paddingText(33, String.valueOf(sbnrate)) + "||");
+                contentSimulationSbn.add("------------------------------------------------------------------||");
+                contentSimulationSbn.add(" HASIL INVESTASI HINGGA JATUH TEMPO : Rp. " +  MainUtils.formatRupiah(totalInvest) + MainUtils.paddingText(24, MainUtils.formatRupiah(totalInvest)) + "||");
+                contentSimulationSbn.add("==================================================================||");
+                contentSimulationSbn.add("                  INPUT KODE SBN UNTUK SIMULASI                   ||");
+                contentSimulationSbn.add("==================================================================||");
+            }
+        }
+        return contentSimulationSbn;
     }
 }

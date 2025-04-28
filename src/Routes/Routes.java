@@ -2,6 +2,9 @@ package Routes;
 
 import Account.Users;
 import Controllers.UserController;
+import Data.SecuritiesData;
+import Securities.Securities;
+import Securities.Stocks;
 import Utils.MainUtils;
 import View.UserView;
 
@@ -134,6 +137,16 @@ public class Routes {
                                 choice = scanner.nextLine();
                             }
                         }while(choice.equals("NEXT") || choice.equals("PREV"));
+                    }
+                }
+                case "7" -> {
+                    MainUtils.clearScreen();
+                    UserView.landingSimulationSbn();
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                    if(!choice.matches("[0-9]")){
+                        UserView.viewSimulationSbn(choice);
+                        running = false;
                     }
                 }
                 case "0" -> {
