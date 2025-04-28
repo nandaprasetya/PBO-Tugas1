@@ -608,4 +608,69 @@ public class UserController {
         contentSimulationSbn.add("==================================================================||");
         return contentSimulationSbn;
     }
+
+    public static void sellStock(String code, Users user){
+        ArrayList<PortfolioItem> items = Users.getPortfolio();
+        boolean found = false;
+        for(PortfolioItem item : new ArrayList<>(items)){
+            if(item.getSecurities().getCode().equalsIgnoreCase(code)){
+                System.out.println("||=====================================================================================||");
+                System.out.println("||                                                                                     ||");
+                System.out.println("|| ANDA AKAN MENJUAL SAHAM : " + code + MainUtils.paddingText(58, code) + "||");
+                System.out.println("|| TOTAL SAHAM YANG DIMILIKI : " + code + MainUtils.paddingText(55, String.valueOf(item.getQuantity())) + "||");
+                System.out.println("||                                                                                     ||");
+                System.out.println("||=====================================================================================||");
+                System.out.print("|| Masukan Jumlah LOT : ");
+                int lotQuantity = scanner.nextInt();
+                if(lotQuantity > item.getQuantity() || lotQuantity < 0){
+                    MainUtils.clearScreen();
+                    System.out.println("||=====================================================================================||");
+                    System.out.println("||              TRANSAKSI PENJUALAN GAGAL, SAHAM YANG DIMILIKI KURANG                  ||");
+                    System.out.println("||=====================================================================================||");
+                    System.out.println("||                 PESAN AKAN TERTUTUP OTOMATIS DALAM 3 DETIK                          ||");
+                    System.out.println("||=====================================================================================||");
+                    for(int i = 0; i < 3; i++){
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Accounts loggedInAccount = Session.getCurrentUser();
+                    Routes.userRoutes((Users) loggedInAccount);
+                }else{
+                    if (item.getSecurities() instanceof Stocks stock) {
+                        ArrayList<Double> history = stock.getPriceHistory();
+                        double sellPrice = history.isEmpty() ? stock.getPrice() : history.getLast();
+                        double buyPrice = item.getPurchasePrice();
+                        double total = lotQuantity * 100 * sellPrice;
+                        int remainingStock = item.getQuantity() - lotQuantity;
+                        item.decreaseQuantity(lotQuantity);
+                        user.setBalance(user.getBalance() + total);
+                        if (item.getQuantity() == 0) {
+                            items.remove(item);
+                        }
+                        UserView.successSellStock(remainingStock, (int) total, sellPrice, buyPrice, lotQuantity);
+                    }
+                }
+                break;
+            }
+            if (!found) {
+                System.out.println("||=====================================================================================||");
+                System.out.println("||                           SAHAM TIDAK DAPAT DITEMUKAN                               ||");
+                System.out.println("||=====================================================================================||");
+                System.out.println("||                 PESAN AKAN TERTUTUP OTOMATIS DALAM 3 DETIK                          ||");
+                System.out.println("||=====================================================================================||");
+                for(int i = 0; i < 3; i++){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Accounts loggedInAccount = Session.getCurrentUser();
+                Routes.userRoutes((Users) loggedInAccount);
+            }
+        }
+    }
 }

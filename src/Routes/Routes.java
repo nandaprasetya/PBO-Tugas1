@@ -14,7 +14,7 @@ public class Routes {
     public static void userRoutes(Users user){
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
-
+        MainUtils.clearScreen();
         UserView.userMainMenu();
         UserView.lineInput();
         String choice = scanner.nextLine();
@@ -151,6 +151,13 @@ public class Routes {
                             UserView.lineInput();
                             choice = scanner.nextLine();
                         } while(!choice.matches("[0-9]"));
+                    }
+                }
+                case "8" -> {
+                    UserView.viewSellStock(user);
+                    choice = scanner.nextLine();
+                    if(!choice.matches("[0-9]")){
+                        UserController.sellStock(choice, user);
                     }
                 }
                 case "0" -> {

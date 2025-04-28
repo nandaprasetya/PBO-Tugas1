@@ -1,8 +1,10 @@
 package View;
 
+import Account.Accounts;
 import Account.Session;
 import Controllers.UserController;
 import Data.SecuritiesData;
+import Routes.Routes;
 import Securities.Stocks;
 import Account.Users;
 import Utils.MainUtils;
@@ -34,10 +36,10 @@ public class UserView {
                 "||     SAHAM       ||",
                 "|| [7] SIMULASI    ||",
                 "||     SBN         ||",
-                "|| [8] TAMBAH/HAPUS||",
+                "|| [8] JUAL SAHAM  ||",
+                "|| [9] TAMBAH/HAPUS||",
                 "||     WATCHLIST   ||",
                 "|| [0] LOGOUT      ||",
-                "||                 ||",
                 "||=================||"
         };
     }
@@ -362,9 +364,61 @@ public class UserView {
     public static void landingSimulationSbn(){
         System.out.println("||=====================================================================================||");
         System.out.println("||                                                                                     ||");
-        System.out.println("||                          TAMBAH DAN HAPUS WATCHLIST                                 ||");
+        System.out.println("||                     MASUKAN KODE SBN UNTUK SIMULASI                                 ||");
         System.out.println("||                                                                                     ||");
         System.out.println("||=====================================================================================||");
+    }
+
+    public static void viewSellStock(Users user){
+        int page = 1;
+        viewStockPortofolio(user, page);
+        System.out.println("||                                                                                     ||");
+        System.out.println("|| MASUKAN KODE SAHAM UNTUK MENJUAL                                                    ||");
+        System.out.println("||=====================================================================================||");
+        System.out.print("|| Masukan Kode : ");
+    }
+
+    public static void successSellStock(int remainingStocks, int totalSaleAmount, double sellPrice, double buyPrice, int lotQuantity){
+        String[] mainMenu = listMainMenu();
+        List<String> contentSuccessSell = new ArrayList<>();
+
+        String baseText = "HAI "+ getCurrentUser().getUsername() +", TRANSAKSI PENJUALAN MU SUKSES";
+        String fullLine = baseText + MainUtils.paddingText(66, baseText) + "||";
+        contentSuccessSell.add("==================================================================||");
+        contentSuccessSell.add("                                                                  ||");
+        contentSuccessSell.add(fullLine);
+        contentSuccessSell.add("                                                                  ||");
+        contentSuccessSell.add("==================================================================||");
+        contentSuccessSell.add("                                                                  ||");
+        contentSuccessSell.add("SISA SAHAM : "+ remainingStocks + MainUtils.paddingText(53, String.valueOf(remainingStocks)) +"||");
+        contentSuccessSell.add("------------------------------------------------------------------||");
+        contentSuccessSell.add("SAHAM YANG DIJUAL : "+ lotQuantity + MainUtils.paddingText(46, String.valueOf(lotQuantity)) +"||");
+        contentSuccessSell.add("------------------------------------------------------------------||");
+        contentSuccessSell.add("HARGA BELI : Rp. "+ MainUtils.formatRupiah((long) buyPrice) + MainUtils.paddingText(49, MainUtils.formatRupiah((long) buyPrice)) +"||");
+        contentSuccessSell.add("------------------------------------------------------------------||");
+        contentSuccessSell.add("HARGA JUAL : Rp. "+ MainUtils.formatRupiah((long) sellPrice) + MainUtils.paddingText(49, MainUtils.formatRupiah((long) sellPrice)) +"||");
+        contentSuccessSell.add("------------------------------------------------------------------||");
+        contentSuccessSell.add("HASIL PENJUALAN : Rp. "+ MainUtils.formatRupiah(totalSaleAmount) + MainUtils.paddingText(44, MainUtils.formatRupiah(totalSaleAmount)) +"||");
+        contentSuccessSell.add("                                                                  ||");
+        contentSuccessSell.add("==================================================================||");
+        contentSuccessSell.add("                 TERIMA KASIH SUDAH BERTRANSAKSI                  ||");
+        contentSuccessSell.add("==================================================================||");
+
+        MainUtils.clearScreen();
+        for(int i = 0; i < mainMenu.length; i++){
+            System.out.println(mainMenu[i] + contentSuccessSell.get(i));
+        }
+        System.out.println("||                 PESAN AKAN TERTUTUP OTOMATIS DALAM 3 DETIK                          ||");
+        System.out.println("||=====================================================================================||");
+        for(int i = 0; i < 3; i++){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Accounts loggedInAccount = Session.getCurrentUser();
+        Routes.userRoutes((Users) loggedInAccount);
     }
 
     public static void viewSimulationSbn(String code){
