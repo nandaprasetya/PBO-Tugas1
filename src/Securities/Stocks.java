@@ -3,6 +3,7 @@ package Securities;
 import Data.SecuritiesData;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Stocks extends Securities {
@@ -49,32 +50,32 @@ public class Stocks extends Securities {
 
         String code;
         do {
-            System.out.print("Masukkan kode saham: ");
+            System.out.print("|| Masukkan kode saham       : ");
             code = scanner.nextLine().trim();
             if (code.isEmpty()) {
-                System.out.println("Kode saham tidak boleh kosong!");
+                System.out.println("|| Kode saham tidak boleh kosong!");
             }
         } while (code.isEmpty());
 
         String name;
         do {
-            System.out.print("Masukkan nama perusahaan: ");
+            System.out.print("|| Masukkan nama perusahaan  : ");
             name = scanner.nextLine().trim();
             if (name.isEmpty()) {
-                System.out.println("Nama perusahaan tidak boleh kosong!");
+                System.out.println("|| Nama perusahaan tidak boleh kosong!");
             }
         } while (name.isEmpty());
 
         double firstPrice = -1;
         while (firstPrice <= 0) {
-            System.out.print("Masukkan harga awal saham: ");
+            System.out.print("|| Masukkan harga awal saham : ");
             if (scanner.hasNextDouble()) {
                 firstPrice = scanner.nextDouble();
                 if (firstPrice <= 0) {
-                    System.out.println("Harga harus lebih dari 0!");
+                    System.out.println("|| Harga harus lebih dari 0!");
                 }
             } else {
-                System.out.print("Input tidak valid! Masukkan angka: ");
+                System.out.print("|| Input tidak valid! Masukkan angka: ");
                 scanner.next();
             }
         }
@@ -82,10 +83,10 @@ public class Stocks extends Securities {
 
         String sector;
         do {
-            System.out.print("Masukkan sektor saham: ");
+            System.out.print("|| Masukkan sektor saham     : ");
             sector = scanner.nextLine().trim();
             if (sector.isEmpty()) {
-                System.out.println("Sektor tidak boleh kosong!");
+                System.out.println("|| Sektor tidak boleh kosong!");
             }
         } while (sector.isEmpty());
 
@@ -93,48 +94,54 @@ public class Stocks extends Securities {
         SecuritiesData.getStocksList().add(newStock);
 
         System.out.println();
-        System.out.println("Saham berhasil ditambahkan ke daftar!");
+        System.out.println("||==================================================================||");
+        System.out.println("||            Saham berhasil ditambahkan ke daftar!                 ||");
+        System.out.println("||==================================================================||");
+        System.out.println();
     }
 
     public static void updateStockPrice(Scanner scanner) {
         System.out.println("||========================= UBAH HARGA SAHAM ===========================||");
 
         if (SecuritiesData.getStocksList().isEmpty()) {
-            System.out.println("Tidak ada saham yang tersedia untuk diubah.");
+            System.out.println("|| Tidak ada saham yang tersedia untuk diubah.                         ||");
+            System.out.println("||=====================================================================||");
             return;
         }
 
-        System.out.println("Daftar Saham:");
+        System.out.println("|| Daftar Saham:                                                        ||");
         int no = 1;
         for (Stocks stock : SecuritiesData.getStocksList()) {
-            System.out.printf("%d. %s - %s%n", no++, stock.getCode(), stock.getName());
+            String sahamInfo = no++ + ". " + stock.getCode() + " - " + stock.getName();
+            System.out.printf("|| %-68s ||%n", sahamInfo);
         }
-
-        System.out.print("Masukkan kode saham yang ingin diubah harganya: ");
-        String code = scanner.nextLine().trim();
+        System.out.println("||======================================================================||");
 
         Stocks found = null;
-        for (Stocks stock : SecuritiesData.getStocksList()) {
-            if (stock.getCode().equalsIgnoreCase(code)) {
-                found = stock;
-                break;
+        do {
+            System.out.print("|| Masukkan kode saham yang ingin diubah harganya: ");
+            String code = scanner.nextLine().trim();
+            for (Stocks stock : SecuritiesData.getStocksList()) {
+                if (stock.getCode().equalsIgnoreCase(code)) {
+                    found = stock;
+                    break;
+                }
             }
-        }
-
-        if (found == null) {
-            return;
-        }
+            if (found == null) {
+                System.out.println("|| Kode saham tidak ditemukan, coba lagi!                               ||");
+            }
+        } while (found == null);
 
         double newPrice = -1;
         while (newPrice <= 0) {
-            System.out.print("Masukkan harga baru: ");
+            System.out.print("|| Masukkan harga baru: ");
             if (scanner.hasNextDouble()) {
                 newPrice = scanner.nextDouble();
                 if (newPrice <= 0) {
-                    System.out.println("Harga harus lebih dari 0!");
+                    System.out.println("|| Harga harus lebih dari 0!                                            ||");
                 }
             } else {
-                System.out.println("Input tidak valid! Masukkan angka yang benar.");
+                System.out.println("|| Input tidak valid! Masukkan angka yang benar.                        ||");
                 scanner.next();
             }
         }
@@ -142,37 +149,74 @@ public class Stocks extends Securities {
 
         found.getPriceHistory().add(newPrice);
         System.out.println();
-        System.out.printf("Harga saham %s berhasil diperbarui menjadi %.2f%n", found.getCode(), newPrice);
+        System.out.println("||======================================================================||");
+        System.out.printf("|| Harga saham %-5s berhasil diperbarui menjadi %-10.2f             ||%n", found.getCode(), newPrice);
+        System.out.println("||======================================================================||");
+
+        String back;
+        do {
+            System.out.println("Tekan Enter untuk kembali ke Menu Saham...");
+            back = scanner.nextLine();
+        } while (!back.isEmpty());
     }
 
     public static void deleteStock(Scanner scanner) {
         System.out.println("||========================= HAPUS SAHAM ==============================||");
 
         if (SecuritiesData.getStocksList().isEmpty()) {
-            System.out.println("Tidak ada saham yang tersedia untuk dihapus.");
+            System.out.println("|| Tidak ada saham yang tersedia untuk dihapus.                      ||");
+            System.out.println("||===================================================================||");
             return;
         }
 
-        System.out.println("Daftar Saham:");
+        System.out.println("|| Daftar Saham:                                                      ||");
         int no = 1;
         for (Stocks stock : SecuritiesData.getStocksList()) {
-            System.out.printf("%d. %s - %s%n", no++, stock.getCode(), stock.getName());
+            String sahamInfo = no++ + ". " + stock.getCode() + " - " + stock.getName();
+            System.out.printf("|| %-66s ||%n", sahamInfo);
         }
-
-        System.out.print("Masukkan kode saham yang ingin dihapus: ");
-        String code = scanner.nextLine().trim();
+        System.out.println("||====================================================================||");
 
         Stocks found = null;
-        for (Stocks stock : SecuritiesData.getStocksList()) {
-            if (stock.getCode().equalsIgnoreCase(code)) {
-                found = stock;
-                break;
+        do {
+            System.out.print("|| Masukkan kode saham yang ingin dihapus: ");
+            String code = scanner.nextLine().trim();
+            for (Stocks stock : SecuritiesData.getStocksList()) {
+                if (stock.getCode().equalsIgnoreCase(code)) {
+                    found = stock;
+                    break;
+                }
             }
+            if (found == null) {
+                System.out.println("|| Kode saham tidak ditemukan, coba lagi!                             ||");
+            }
+        } while (found == null);
+
+        String confirm;
+        do {
+            System.out.print("|| Yakin ingin menghapus saham ini? (Ya/Tidak): ");
+            confirm = scanner.nextLine().trim();
+            if (!confirm.equalsIgnoreCase("Ya") && !confirm.equalsIgnoreCase("Tidak")) {
+                System.out.println("|| Input tidak valid! Ketik 'Ya' atau 'Tidak'.                        ||");
+            }
+        } while (!confirm.equalsIgnoreCase("Ya") && !confirm.equalsIgnoreCase("Tidak"));
+
+        if (confirm.equalsIgnoreCase("Ya")) {
+            SecuritiesData.getStocksList().remove(found);
+            System.out.println("||====================================================================||");
+            String successMessage = "Saham " + found.getName() + " berhasil dihapus!";
+            System.out.printf("|| %-66s ||%n", successMessage);
+            System.out.println("||====================================================================||");
+        } else {
+            System.out.println("||====================================================================||");
+            System.out.println("|| Penghapusan dibatalkan.                                            ||");
+            System.out.println("||====================================================================||");
         }
 
-        if (found != null) {
-            SecuritiesData.getStocksList().remove(found);
-            System.out.println("Saham berhasil dihapus!");
-        }
+        String back;
+        do {
+            System.out.print("Tekan Enter untuk kembali ke Menu Saham...");
+            back = scanner.nextLine();
+        } while (!back.isEmpty());
     }
 }
