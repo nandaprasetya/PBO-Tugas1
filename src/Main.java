@@ -32,6 +32,5 @@ public class Main {
             Routes.userRoutes((Users) loggedInAccount);
         }
         scanner.close();
-
     }
 }
