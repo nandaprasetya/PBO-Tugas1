@@ -236,6 +236,69 @@ public class UserView {
         }
     }
 
+    public static void viewSbnPortofolio(Users user, int pageParam){
+        List<String> listSbn = UserController.listSbnPortofolio(user);
+        String[] mainMenu = listMainMenu();
+
+        String baseText = "HAI "+ getCurrentUser().getUsername() +", INI PORTOFOLIO MU";
+        String fullLine = baseText + MainUtils.paddingText(66, baseText) + "||";
+        int page = pageParam;
+        int totalPage = listSbn.size() / 8;
+        if(page >= 1){
+            int j = (page - 1) * 8;
+            for (int i = 0; i < mainMenu.length; i++){
+                System.out.print(mainMenu[i]);
+                if(i <= 7){
+                    if(i == 0){
+                        System.out.print("==================================================================||");
+                    }else if(i == 1){
+                        System.out.print(fullLine);
+                    }else if(i == 2){
+                        System.out.print("                                                                  ||");
+                    }else if(i == 3){
+                        System.out.print("==================================================================||");
+                    }else if(i == 4){
+                        System.out.print(" PORTOFOLIO ANDA :                                                ||");
+                    }else if(i == 5){
+                        System.out.print("==================================================================||");
+                    }else if(i == 6){
+                        System.out.print(" NO. || KODE   || BUNGA/BULAN || JUMLAH  || BUNGA  || JATUH TEMPO ||");
+                    }else {
+                        System.out.print("=====||========||=============||=========||========||=============||");
+                    }
+                }else {
+                    if (i < 16) {
+                        System.out.print(listSbn.get(j));
+                    }
+                    if (i == 16) {
+                        System.out.print("==================================================================||");
+                    } else if (i == 17) {
+                        if (UserController.maxPageListSbnPorto(user) == 0){
+                            System.out.print(" PILIH MENU [3] UNTUK MEMBELI SBN                                 ||");
+                        } else if(page == 1 && UserController.maxPageListSbnPorto(user) == 1){
+                            String lineText = " [" + page + "/" + UserController.maxPageListSbnPorto(user) + "]";
+                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                        }
+                        else if (page == 1) {
+                            String lineText = " [" + page + "/" + UserController.maxPageListSbnPorto(user) + "] [NEXT] SELANJUTNYA";
+                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                        } else if (page == UserController.maxPageListSbnPorto(user)) {
+                            String lineText = " [" + page + "/" + UserController.maxPageListSbnPorto(user) + "] [PREV] SEBELUMNYA";
+                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                        } else {
+                            String lineText = " [" + page + "/" + UserController.maxPageListSbnPorto(user) + "] [PREV] SEBELUMNYA | [NEXT] SELANJUTNYA";
+                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                        }
+                    } else if (i == 18) {
+                        System.out.print("==================================================================||");
+                    }
+                    j += 1;
+                }
+                System.out.println();
+            }
+        }
+    }
+
     public static void showUserMenu(){
         System.out.println("||=================||==================================================================||");
         System.out.println("|| MAIN MENU       ||                         SELAMAT DATANG                           ||");

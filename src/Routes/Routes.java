@@ -84,6 +84,32 @@ public class Routes {
                     }
 //                    running = false;
                 }
+                case "5" -> {
+                    int page = 1;
+                    UserView.viewSbnPortofolio(user, page);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                    if(!choice.matches("[0-9]")){
+                        do {
+                            MainUtils.clearScreen();
+                            if(choice.equals("NEXT")){
+                                if(page < UserController.maxPageListSbnPorto(user)){
+                                    page += 1;
+                                }
+                                UserView.viewSbnPortofolio(user, page);
+                                UserView.lineInput();
+                                choice = scanner.nextLine();
+                            }else if(choice.equals("PREV")){
+                                if(page > 1){
+                                    page -= 1;
+                                }
+                                UserView.viewSbnPortofolio(user, page);
+                                UserView.lineInput();
+                                choice = scanner.nextLine();
+                            }
+                        }while(choice.equals("NEXT") || choice.equals("PREV"));
+                    }
+                }
                 case "0" -> {
                     running = false;
                 }

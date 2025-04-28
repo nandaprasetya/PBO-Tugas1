@@ -118,9 +118,30 @@ public class UserController {
     }
 
     public static int maxPageListSbn(){
-        List<String> contentListStock = UserController.getListSbns();
+        List<String> listSbn = UserController.getListSbns();
 
-        return contentListStock.size() / 8;
+        return listSbn.size() / 8;
+    }
+
+    public static int maxPageListSbnPorto(Users user){
+        List<SBNs> listSbn = SecuritiesData.getSbnsList();
+        ArrayList<PortfolioItem> sbnPorto = Users.getPortfolio();
+        int portoCount = 0;
+        for (SBNs sbn : listSbn) {
+            for(PortfolioItem porto : sbnPorto){
+                if(sbn.getCode().equalsIgnoreCase(porto.getSecurities().getCode())){
+                    portoCount++;
+                }
+            }
+        }
+        double calculatePage = (double) portoCount / 8;
+        int totalpage = 0;
+        if(calculatePage > 0.0 && calculatePage < 1.0){
+            totalpage = 1;
+        }else if(calculatePage > 1.0){
+            totalpage = (int) Math.ceil(calculatePage);
+        }
+        return totalpage;
     }
 
     public static List<String> getListSbns(){
@@ -453,5 +474,36 @@ public class UserController {
                 Routes.userRoutes((Users) loggedInAccount);
             }
         }
+    }
+
+    public static List<String> listSbnPortofolio(Users user) {
+        ArrayList<PortfolioItem> items = Users.getPortfolio();
+        List<String> listSbn = new ArrayList<>();
+        if (items.isEmpty()) {
+            listSbn.add("                       PORTOFOLIO KOSONG                          ||");
+            listSbn.add("                         AYO BELI SBN                             ||");
+            listSbn.add("                                                                  ||");
+            listSbn.add("                                                                  ||");
+            listSbn.add("                                                                  ||");
+            listSbn.add("                                                                  ||");
+            listSbn.add("                                                                  ||");
+            listSbn.add("                                                                  ||");
+        } else {
+            int no = 1;
+            for (PortfolioItem item : items) {
+                if (item.getSecurities() instanceof SBNs sbn) {
+                    String monthInterest = String.valueOf( (int) (((sbn.getInterestRate() / 12) / 100 * (item.getQuantity() * item.getPurchasePrice())) * 0.9));
+                    int quantity = item.getQuantity();
+                    String stocksText = "  " + no + MainUtils.paddingText(3, String.valueOf(no)) +"|| " + item.getSecurities().getCode() + " || " + monthInterest + MainUtils.paddingText(12, monthInterest) + "|| " + quantity + MainUtils.paddingText(8, String.valueOf(quantity)) + "|| " + sbn.getInterestRate() + "%" + MainUtils.paddingText(6, String.valueOf(sbn.getInterestRate())) + "|| " + sbn.getMaturityDate() + "  ||";
+                    listSbn.add(stocksText);
+                }
+                no++;
+            }
+            int blankSpace = 8 - (listSbn.size() % 8);
+            for (int i = 0; i <= blankSpace; i++) {
+                listSbn.add("                                                                  ||");
+            }
+        }
+        return (listSbn);
     }
 }

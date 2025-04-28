@@ -24,4 +24,8 @@ public class PortfolioItem {
     public void addQuantity(int amount) {
         this.quantity += amount;
     }
+
+    public double getPurchasePrice() {
+        return purchasePrice;
+    }
 }
