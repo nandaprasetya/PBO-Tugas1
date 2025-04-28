@@ -16,11 +16,11 @@ public class Routes {
     public static void userRoutes(Users user){
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
-
+        UserMainUtils.clearScreen();
         UserView.userMainMenu();
         UserView.lineInput();
         String choice = scanner.nextLine();
-        while (running) {
+        do {
             UserMainUtils.clearScreen();
             switch (choice){
                 case "1" -> {
@@ -147,20 +147,31 @@ public class Routes {
                     UserView.lineInput();
                     choice = scanner.nextLine();
                     if(!choice.matches("[0-9]")){
-                        UserView.viewSimulationSbn(choice);
-                        running = false;
+                        do{
+                            UserMainUtils.clearScreen();
+                            UserView.viewSimulationSbn(choice);
+                            UserView.lineInput();
+                            choice = scanner.nextLine();
+                        } while(!choice.matches("[0-9]"));
+                    }
+                }
+                case "8" -> {
+                    UserView.viewSellStock(user);
+                    choice = scanner.nextLine();
+                    if(!choice.matches("[0-9]")){
+                        UserController.sellStock(choice, user);
                     }
                 }
                 case "0" -> {
                     running = false;
                 }
+                default -> {
+                    UserView.userMainMenu();
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                }
             }
-        }
-    }
-
-    public static void adminRoutes() {
-        Scanner scanner = new Scanner(System.in);
-        AdminController.start(scanner);
+        }while(!choice.equals("0"));
     }
 
     public static void loginFailedView() {

@@ -1,7 +1,8 @@
 package Securities;
+
 import java.time.LocalDate;
 
-public class SBNs extends Securities {
+public class SBNs extends Securities{
     private int nationalQuota;
     private double interestRate;
     private int durationInMonths;

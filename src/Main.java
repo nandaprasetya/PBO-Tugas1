@@ -1,3 +1,4 @@
+import Controllers.AdminController;
 import Routes.Routes;
 import Account.Login;
 import Account.Accounts;
@@ -11,6 +12,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Login login = new Login();
+        int choice;
 
         System.out.println("||==================================================================||");
         System.out.println("||                      WELCOME INVESTIA                            ||");
@@ -34,7 +36,7 @@ public class Main {
             if (user instanceof Users) {
                 Routes.userRoutes((Users) user);
             } else if (user instanceof Admin) {
-                Routes.adminRoutes();
+                AdminController.start(scanner);
             }
         }
         scanner.close();

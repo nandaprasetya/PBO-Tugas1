@@ -2,7 +2,7 @@ package Securities;
 
 import java.util.ArrayList;
 
-public class Stocks extends Securities {
+public class Stocks extends Securities{
     private ArrayList<Double> priceHistory;
     private String sector;
 
@@ -13,10 +13,12 @@ public class Stocks extends Securities {
         this.sector = sector;
     }
 
-    public ArrayList<Double> getPriceHistory() { return priceHistory;
+    public ArrayList<Double> getPriceHistory() {
+        return priceHistory;
     }
 
-    public String getSector() { return sector;
+    public String getSector() {
+        return sector;
     }
 
     public double getPreviousPrice() {
@@ -27,7 +29,8 @@ public class Stocks extends Securities {
     public double getCurrentPrice() {
         if (!priceHistory.isEmpty()) {
             return priceHistory.get(priceHistory.size() - 1);
-        } return price;
+        }
+        return price;
     }
 
     public String getPriceChangePercentage() {

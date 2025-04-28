@@ -232,6 +232,7 @@ public class AdminView {
         SecuritiesData.getStocksList().add(newStock);
 
         System.out.println("|| Saham berhasil ditambahkan ke daftar! ||");
+        System.out.println("||===================================================================||");
     }
 
     public static void updateStockPrice(Scanner scanner) {
@@ -264,7 +265,7 @@ public class AdminView {
 
         found.getPriceHistory().add(newPrice);
 
-        System.out.println("|| Harga saham berhasil diperbarui!                                   ||");
+        System.out.println("|| Harga saham berhasil diperbarui!                                 ||");
     }
 
     public static void deleteStock(Scanner scanner) {
