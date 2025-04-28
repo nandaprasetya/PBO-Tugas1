@@ -26,14 +26,13 @@ public class Main {
         System.out.println();
 
         Accounts user = login.login(username, password);
+        Accounts loggedInAccount = Session.getCurrentUser();
+
         if (user == null) {
-            System.out.println("||==================================================================||");
-            System.out.println("||                          LOGIN GAGAL                             ||");
-            System.out.println("||      Username atau password Anda salah. Silakan coba lagi!       ||");
-            System.out.println("||==================================================================||");
+            Routes.loginFailedView();
         } else {
             if (user instanceof Users) {
-                Routes.userRoutes();
+                Routes.userRoutes((Users) user);
             } else if (user instanceof Admin) {
                 Routes.adminRoutes();
             }

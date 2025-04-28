@@ -1,122 +1,173 @@
 package Routes;
 
+import Account.Users;
+import Controllers.UserController;
+import Controllers.AdminController;
+import Data.SecuritiesData;
+import Securities.Securities;
+import Securities.Stocks;
+import Utils.UserMainUtils;
 import View.AdminView;
 import View.UserView;
-import Securities.SBNs;
-import Securities.Stocks;
 
 import java.util.Scanner;
 
 public class Routes {
-
-    public static void userRoutes() {
+    public static void userRoutes(Users user){
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
+        UserView.userMainMenu();
+        UserView.lineInput();
+        String choice = scanner.nextLine();
         while (running) {
-            UserView.userMainMenu();
-            running = false;
+            UserMainUtils.clearScreen();
+            switch (choice){
+                case "1" -> {
+                    int page = 1;
+                    UserView.viewListStock(page);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                    if(!choice.matches("[0-9]")){
+                        do {
+                            UserMainUtils.clearScreen();
+                            if(choice.equals("NEXT")){
+                                if(page < UserController.maxPageListStock()){
+                                    page += 1;
+                                }
+                                UserView.viewListStock(page);
+                                UserView.lineInput();
+                                choice = scanner.nextLine();
+                            }else if(choice.equals("PREV")){
+                                if(page > 1){
+                                    page -= 1;
+                                }
+                                UserView.viewListStock(page);
+                                UserView.lineInput();
+                                choice = scanner.nextLine();
+                            }
+                        }while(choice.equals("NEXT") || choice.equals("PREV"));
+                    }
+                }
+                case "2" -> {
+                    int page = 1;
+                    UserView.viewListSbn(page);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                    if(!choice.matches("[0-9]")){
+                        do {
+                            UserMainUtils.clearScreen();
+                            if(choice.equals("NEXT")){
+                                if(page < UserController.maxPageListSbn()){
+                                    page += 1;
+                                }
+                                UserView.viewListSbn(page);
+                                UserView.lineInput();
+                                choice = scanner.nextLine();
+                            }else if(choice.equals("PREV")){
+                                if(page > 1){
+                                    page -= 1;
+                                }
+                                UserView.viewListSbn(page);
+                                UserView.lineInput();
+                                choice = scanner.nextLine();
+                            }
+                        }while(choice.equals("NEXT") || choice.equals("PREV"));
+                    }
+                }
+                case "3" -> {
+                    UserController.buyStockSbn(user);
+                }
+                case "4" -> {
+                    UserView.viewBalance(user);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                    if(choice.equals("11")){
+                        UserController.topUpBalance(user);
+                    }else if(choice.equals("12")){
+                        UserController.withdraw(user);
+                    }
+//                    running = false;
+                }
+                case "5" -> {
+                    int page = 1;
+                    UserView.viewSbnPortofolio(user, page);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                    if(!choice.matches("[0-9]")){
+                        do {
+                            UserMainUtils.clearScreen();
+                            if(choice.equals("NEXT")){
+                                if(page < UserController.maxPageListSbnPorto(user)){
+                                    page += 1;
+                                }
+                                UserView.viewSbnPortofolio(user, page);
+                                UserView.lineInput();
+                                choice = scanner.nextLine();
+                            }else if(choice.equals("PREV")){
+                                if(page > 1){
+                                    page -= 1;
+                                }
+                                UserView.viewSbnPortofolio(user, page);
+                                UserView.lineInput();
+                                choice = scanner.nextLine();
+                            }
+                        }while(choice.equals("NEXT") || choice.equals("PREV"));
+                    }
+                }
+                case "6" -> {
+                    int page = 1;
+                    UserView.viewStockPortofolio(user, page);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                    if(!choice.matches("[0-9]")){
+                        do {
+                            UserMainUtils.clearScreen();
+                            if(choice.equals("NEXT")){
+                                if(page < UserController.maxPageListStockPorto(user)){
+                                    page += 1;
+                                }
+                                UserView.viewStockPortofolio(user, page);
+                                UserView.lineInput();
+                                choice = scanner.nextLine();
+                            }else if(choice.equals("PREV")){
+                                if(page > 1){
+                                    page -= 1;
+                                }
+                                UserView.viewStockPortofolio(user, page);
+                                UserView.lineInput();
+                                choice = scanner.nextLine();
+                            }
+                        }while(choice.equals("NEXT") || choice.equals("PREV"));
+                    }
+                }
+                case "7" -> {
+                    UserMainUtils.clearScreen();
+                    UserView.landingSimulationSbn();
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                    if(!choice.matches("[0-9]")){
+                        UserView.viewSimulationSbn(choice);
+                        running = false;
+                    }
+                }
+                case "0" -> {
+                    running = false;
+                }
+            }
         }
     }
 
     public static void adminRoutes() {
         Scanner scanner = new Scanner(System.in);
-        handleAdmin(scanner);
+        AdminController.start(scanner);
     }
 
-    public static void handleAdmin(Scanner scanner) {
-        int choice;
-        do {
-            AdminView.adminMainMenu();
-            System.out.print("Masukkan pilihan Anda: ");
-            while (!scanner.hasNextInt()) {
-                System.out.println("Input harus berupa angka!");
-                scanner.next();
-                System.out.print("Masukkan pilihan Anda: ");
-            }
-            choice = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (choice) {
-                case 1:
-                    handleStockMenu(scanner);
-                    break;
-                case 0:
-                    System.out.println();
-                    System.out.println("||==================================================================||");
-                    System.out.println("||                       LOGOUT BERHASIL!                           ||");
-                    System.out.println("||             Terima kasih telah menggunakan INVESTIA              ||");
-                    System.out.println("||              Sampai jumpa dan selamat berinvestasi!              ||");
-                    System.out.println("||==================================================================||");
-                    break;
-                default:
-                    System.out.println("Pilihan tidak valid, coba lagi.");
-            }
-        } while (choice != 0);
-    }
-
-    public static void handleStockMenu(Scanner scanner) {
-        int choice;
-        do {
-            AdminView.showStockMenu();
-            System.out.print("Masukkan pilihan Anda (Saham): ");
-            while (!scanner.hasNextInt()) {
-                System.out.println("Input harus berupa angka!");
-                scanner.next();
-                System.out.print("Masukkan pilihan Anda (Saham): ");
-            }
-            choice = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (choice) {
-                case 1:
-                    Stocks.addStock(scanner);
-                    AdminView.adminMainMenu();
-                    System.out.println("Tekan Enter untuk kembali ke Menu Saham...");
-                    scanner.nextLine();
-                    break;
-                case 2:
-                    Stocks.updateStockPrice(scanner);
-                    AdminView.adminMainMenu();
-                    break;
-                case 0:
-                    System.out.println("Kembali ke Menu Admin...");
-                    break;
-                default:
-                    System.out.println("Pilihan tidak valid, coba lagi.");
-            }
-        } while (choice != 0);
-    }
-
-    public static void handleSBNMenu(Scanner scanner) {
-        int choice;
-        do {
-            AdminView.showSBNMenu();
-            System.out.print("Masukkan pilihan Anda (SBN): ");
-            while (!scanner.hasNextInt()) {
-                System.out.println("Input harus berupa angka!");
-                scanner.next();
-                System.out.print("Masukkan pilihan Anda (SBN): ");
-            }
-            choice = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (choice) {
-                case 1:
-                    SBNs.addSBN(scanner);
-                    break;
-                case 2:
-                    SBNs.viewSBNList();
-                    break;
-                case 3:
-                    SBNs.deleteSBN(scanner);
-                    break;
-                case 0:
-                    System.out.println("Kembali ke Menu Admin...");
-                    break;
-                default:
-                    System.out.println("Pilihan tidak valid, coba lagi.");
-            }
-        } while (choice != 0);
+    public static void loginFailedView() {
+        System.out.println();
+        System.out.println("||==================================================================||");
+        System.out.println("||                          LOGIN GAGAL                             ||");
+        System.out.println("||      Username atau password Anda salah. Silakan coba lagi!       ||");
+        System.out.println("||==================================================================||");
     }
 }
