@@ -1,4 +1,4 @@
-package Portofolio;
+package Portfolio;
 
 import Securities.Securities;
 
@@ -27,11 +27,5 @@ public class PortfolioItem {
 
     public double getPurchasePrice() {
         return purchasePrice;
-    }
-
-    public void decreaseQuantity(int amount) {
-        if (quantity >= amount) {
-            quantity -= amount;
-        }
     }
 }

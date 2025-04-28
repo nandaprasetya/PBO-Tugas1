@@ -2,10 +2,12 @@ package Routes;
 
 import Account.Users;
 import Controllers.UserController;
+import Controllers.AdminController;
 import Data.SecuritiesData;
 import Securities.Securities;
 import Securities.Stocks;
-import Utils.MainUtils;
+import Utils.UserMainUtils;
+import View.AdminView;
 import View.UserView;
 
 import java.util.Scanner;
@@ -14,12 +16,12 @@ public class Routes {
     public static void userRoutes(Users user){
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
-
+        UserMainUtils.clearScreen();
         UserView.userMainMenu();
         UserView.lineInput();
         String choice = scanner.nextLine();
-        while (running) {
-            MainUtils.clearScreen();
+        do {
+            UserMainUtils.clearScreen();
             switch (choice){
                 case "1" -> {
                     int page = 1;
@@ -28,7 +30,7 @@ public class Routes {
                     choice = scanner.nextLine();
                     if(!choice.matches("[0-9]")){
                         do {
-                            MainUtils.clearScreen();
+                            UserMainUtils.clearScreen();
                             if(choice.equals("NEXT")){
                                 if(page < UserController.maxPageListStock()){
                                     page += 1;
@@ -54,7 +56,7 @@ public class Routes {
                     choice = scanner.nextLine();
                     if(!choice.matches("[0-9]")){
                         do {
-                            MainUtils.clearScreen();
+                            UserMainUtils.clearScreen();
                             if(choice.equals("NEXT")){
                                 if(page < UserController.maxPageListSbn()){
                                     page += 1;
@@ -94,7 +96,7 @@ public class Routes {
                     choice = scanner.nextLine();
                     if(!choice.matches("[0-9]")){
                         do {
-                            MainUtils.clearScreen();
+                            UserMainUtils.clearScreen();
                             if(choice.equals("NEXT")){
                                 if(page < UserController.maxPageListSbnPorto(user)){
                                     page += 1;
@@ -120,7 +122,7 @@ public class Routes {
                     choice = scanner.nextLine();
                     if(!choice.matches("[0-9]")){
                         do {
-                            MainUtils.clearScreen();
+                            UserMainUtils.clearScreen();
                             if(choice.equals("NEXT")){
                                 if(page < UserController.maxPageListStockPorto(user)){
                                     page += 1;
@@ -140,19 +142,43 @@ public class Routes {
                     }
                 }
                 case "7" -> {
-                    MainUtils.clearScreen();
+                    UserMainUtils.clearScreen();
                     UserView.landingSimulationSbn();
                     UserView.lineInput();
                     choice = scanner.nextLine();
                     if(!choice.matches("[0-9]")){
-                        UserView.viewSimulationSbn(choice);
-                        running = false;
+                        do{
+                            UserMainUtils.clearScreen();
+                            UserView.viewSimulationSbn(choice);
+                            UserView.lineInput();
+                            choice = scanner.nextLine();
+                        } while(!choice.matches("[0-9]"));
+                    }
+                }
+                case "8" -> {
+                    UserView.viewSellStock(user);
+                    choice = scanner.nextLine();
+                    if(!choice.matches("[0-9]")){
+                        UserController.sellStock(choice, user);
                     }
                 }
                 case "0" -> {
                     running = false;
                 }
+                default -> {
+                    UserView.userMainMenu();
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                }
             }
-        }
+        }while(!choice.equals("0"));
+    }
+
+    public static void loginFailedView() {
+        System.out.println();
+        System.out.println("||==================================================================||");
+        System.out.println("||                          LOGIN GAGAL                             ||");
+        System.out.println("||      Username atau password Anda salah. Silakan coba lagi!       ||");
+        System.out.println("||==================================================================||");
     }
 }

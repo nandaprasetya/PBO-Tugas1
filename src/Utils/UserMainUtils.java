@@ -3,7 +3,7 @@ package Utils;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
-public class MainUtils {
+public class UserMainUtils {
     public static String paddingText(int length, String text){
         String padding = "";
         for (int i = 0; i < length - text.length(); i++) {

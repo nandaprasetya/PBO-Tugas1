@@ -24,6 +24,10 @@ public class SBNs extends Securities{
         return interestRate;
     }
 
+    public int getDurationInMonths() {
+        return durationInMonths;
+    }
+
     public LocalDate getMaturityDate() {
         return maturityDate;
     }

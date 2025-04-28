@@ -1,11 +1,11 @@
 package View;
 
+import Account.Accounts;
 import Account.Session;
 import Controllers.UserController;
-import Data.SecuritiesData;
-import Securities.Stocks;
+import Routes.Routes;
 import Account.Users;
-import Utils.MainUtils;
+import Utils.UserMainUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 import static Account.Session.getCurrentUser;
 
 public class UserView {
-    
+
     public static void lineInput(){
         System.out.print("|| MASUKAN KODE MENU : ");
     }
@@ -34,10 +34,10 @@ public class UserView {
                 "||     SAHAM       ||",
                 "|| [7] SIMULASI    ||",
                 "||     SBN         ||",
-                "|| [8] TAMBAH/HAPUS||",
+                "|| [8] JUAL SAHAM  ||",
+                "|| [9] TAMBAH/HAPUS||",
                 "||     WATCHLIST   ||",
                 "|| [0] LOGOUT      ||",
-                "||                 ||",
                 "||=================||"
         };
     }
@@ -48,7 +48,7 @@ public class UserView {
 
         String username = getCurrentUser().getUsername();
         String baseText = " SELAMAT DATANG, " + username;
-        String fullLine = baseText + MainUtils.paddingText(66, baseText) + "||";
+        String fullLine = baseText + UserMainUtils.paddingText(66, baseText) + "||";
 
         int j = 0;
         for (int i = 0; i < mainMenu.length; i++){
@@ -93,7 +93,7 @@ public class UserView {
         List<String> contentListStock = UserController.getlistStocks();
 
         String baseText = "HAI "+ getCurrentUser().getUsername() +", MAU CARI SAHAM APA HARI INI ?";
-        String fullLine = baseText + MainUtils.paddingText(66, baseText) + "||";
+        String fullLine = baseText + UserMainUtils.paddingText(66, baseText) + "||";
         int page = pageParam;
         if(page >= 1){
             int j = (page - 1) * 8;
@@ -126,13 +126,13 @@ public class UserView {
                     } else if (i == 17) {
                         if(page == 1){
                             String lineText = " ["+ page + "/" + UserController.maxPageListStock() +"] [NEXT] SELANJUTNYA";
-                            System.out.print(lineText + MainUtils.paddingText(66, lineText) +"||");
+                            System.out.print(lineText + UserMainUtils.paddingText(66, lineText) +"||");
                         }else if(page == UserController.maxPageListStock()){
                             String lineText = " ["+ page + "/" + UserController.maxPageListStock() +"] [PREV] SEBELUMNYA";
-                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                            System.out.print(lineText + UserMainUtils.paddingText(66, lineText) + "||");
                         }else{
                             String lineText = " ["+ page + "/" + UserController.maxPageListStock() +"] [PREV] SEBELUMNYA | [NEXT] SELANJUTNYA";
-                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                            System.out.print(lineText + UserMainUtils.paddingText(66, lineText) + "||");
                         }
                     } else if (i == 18) {
                         System.out.print("==================================================================||");
@@ -148,7 +148,7 @@ public class UserView {
         String[] mainMenu = listMainMenu();
         List<String> contentListSbn = UserController.getListSbns();
         String baseText = "HAI " + getCurrentUser().getUsername() + ", MAU CARI SBN APA HARI INI ?";
-        String fullLine = baseText + MainUtils.paddingText(66, baseText) + "||";
+        String fullLine = baseText + UserMainUtils.paddingText(66, baseText) + "||";
         int page = pageParam;
 
         if (page >= 1) {
@@ -182,13 +182,13 @@ public class UserView {
                     } else if (i == 17) {
                         if (page == 1) {
                             String lineText = " [" + page + "/" + UserController.maxPageListSbn() + "] [NEXT] SELANJUTNYA";
-                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                            System.out.print(lineText + UserMainUtils.paddingText(66, lineText) + "||");
                         } else if (page == UserController.maxPageListSbn()) {
                             String lineText = " [" + page + "/" + UserController.maxPageListSbn() + "] [PREV] SEBELUMNYA";
-                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                            System.out.print(lineText + UserMainUtils.paddingText(66, lineText) + "||");
                         } else {
                             String lineText = " [" + page + "/" + UserController.maxPageListSbn() + "] [PREV] SEBELUMNYA | [NEXT] SELANJUTNYA";
-                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                            System.out.print(lineText + UserMainUtils.paddingText(66, lineText) + "||");
                         }
                     } else if (i == 18) {
                         System.out.print("==================================================================||");
@@ -202,7 +202,7 @@ public class UserView {
 
     public static void viewBuy(Users user){
         System.out.println("||=====================================================================================||");
-        System.out.println("|| Saldo Anda : Rp. " + MainUtils.formatRupiah((long) user.getBalance()) + MainUtils.paddingText(67, MainUtils.formatRupiah((long) user.getBalance())) + "||");
+        System.out.println("|| Saldo Anda : Rp. " + UserMainUtils.formatRupiah((long) user.getBalance()) + UserMainUtils.paddingText(67, UserMainUtils.formatRupiah((long) user.getBalance())) + "||");
         System.out.println("||=====================================================================================||");
         System.out.println("|| Masukan Kode Saham / Sbn Dengan Benar                                               ||");
         System.out.println("||=====================================================================================||");
@@ -213,17 +213,17 @@ public class UserView {
         List<String> contentBalance = new ArrayList<>();
         contentBalance.add("==================================================================||");
         contentBalance.add("                                                                  ||");
-        contentBalance.add(" HALLO "+ getCurrentUser().getUsername() + MainUtils.paddingText(76, String.valueOf(Session.getCurrentUser())) +"||");
+        contentBalance.add(" HALLO "+ getCurrentUser().getUsername() + UserMainUtils.paddingText(76, String.valueOf(Session.getCurrentUser())) +"||");
         contentBalance.add(" BERIKUT INFORMASI SALDO ANDA                                     ||");
         contentBalance.add("                                                                  ||");
         contentBalance.add("==================================================================||");
         contentBalance.add("                                                                  ||");
-        contentBalance.add(" SALDO ANDA : Rp. "+ MainUtils.formatRupiah((long) user.getBalance()) + MainUtils.paddingText(48, MainUtils.formatRupiah((long) user.getBalance())) +"||");
+        contentBalance.add(" SALDO ANDA : Rp. "+ UserMainUtils.formatRupiah((long) user.getBalance()) + UserMainUtils.paddingText(48, UserMainUtils.formatRupiah((long) user.getBalance())) +"||");
         contentBalance.add("                                                                  ||");
         contentBalance.add("==================================================================||");
         contentBalance.add("                                                                  ||");
-        contentBalance.add(" NILAI INVESTASI SAHAM : Rp. "+ MainUtils.formatRupiah(UserController.getStockBalance()) + MainUtils.paddingText(37, MainUtils.formatRupiah(UserController.getStockBalance())) +"||");
-        contentBalance.add(" NILAI INVESTASI SBN   : Rp. "+ MainUtils.formatRupiah(UserController.getSbnBalance(user)) + MainUtils.paddingText(37, MainUtils.formatRupiah(UserController.getSbnBalance(user))) +"||");
+        contentBalance.add(" NILAI INVESTASI SAHAM : Rp. "+ UserMainUtils.formatRupiah(UserController.getStockBalance()) + UserMainUtils.paddingText(37, UserMainUtils.formatRupiah(UserController.getStockBalance())) +"||");
+        contentBalance.add(" NILAI INVESTASI SBN   : Rp. "+ UserMainUtils.formatRupiah(UserController.getSbnBalance(user)) + UserMainUtils.paddingText(37, UserMainUtils.formatRupiah(UserController.getSbnBalance(user))) +"||");
         contentBalance.add("                                                                  ||");
         contentBalance.add("==================================================================||");
         contentBalance.add("                                                                  ||");
@@ -241,7 +241,7 @@ public class UserView {
         String[] mainMenu = listMainMenu();
 
         String baseText = "HAI "+ getCurrentUser().getUsername() +", INI PORTOFOLIO MU";
-        String fullLine = baseText + MainUtils.paddingText(66, baseText) + "||";
+        String fullLine = baseText + UserMainUtils.paddingText(66, baseText) + "||";
         int page = pageParam;
         if(page >= 1){
             int j = (page - 1) * 8;
@@ -276,17 +276,17 @@ public class UserView {
                             System.out.print(" PILIH MENU [3] UNTUK MEMBELI SBN                                 ||");
                         } else if(page == 1 && UserController.maxPageListSbnPorto(user) == 1){
                             String lineText = " [" + page + "/" + UserController.maxPageListSbnPorto(user) + "]";
-                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                            System.out.print(lineText + UserMainUtils.paddingText(66, lineText) + "||");
                         }
                         else if (page == 1) {
                             String lineText = " [" + page + "/" + UserController.maxPageListSbnPorto(user) + "] [NEXT] SELANJUTNYA";
-                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                            System.out.print(lineText + UserMainUtils.paddingText(66, lineText) + "||");
                         } else if (page == UserController.maxPageListSbnPorto(user)) {
                             String lineText = " [" + page + "/" + UserController.maxPageListSbnPorto(user) + "] [PREV] SEBELUMNYA";
-                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                            System.out.print(lineText + UserMainUtils.paddingText(66, lineText) + "||");
                         } else {
                             String lineText = " [" + page + "/" + UserController.maxPageListSbnPorto(user) + "] [PREV] SEBELUMNYA | [NEXT] SELANJUTNYA";
-                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                            System.out.print(lineText + UserMainUtils.paddingText(66, lineText) + "||");
                         }
                     } else if (i == 18) {
                         System.out.print("==================================================================||");
@@ -303,7 +303,7 @@ public class UserView {
         String[] mainMenu = listMainMenu();
 
         String baseText = "HAI "+ getCurrentUser().getUsername() +", INI PORTOFOLIO MU";
-        String fullLine = baseText + MainUtils.paddingText(66, baseText) + "||";
+        String fullLine = baseText + UserMainUtils.paddingText(66, baseText) + "||";
         if(page >= 1){
             int j = (page - 1) * 8;
             for (int i = 0; i < mainMenu.length; i++){
@@ -337,17 +337,17 @@ public class UserView {
                             System.out.print(" PILIH MENU [3] UNTUK MEMBELI SAHAM                               ||");
                         } else if(page == 1 && UserController.maxPageListStockPorto(user) == 1){
                             String lineText = " [" + page + "/" + UserController.maxPageListStockPorto(user) + "]";
-                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                            System.out.print(lineText + UserMainUtils.paddingText(66, lineText) + "||");
                         }
                         else if (page == 1) {
                             String lineText = " [" + page + "/" + UserController.maxPageListStockPorto(user) + "] [NEXT] SELANJUTNYA";
-                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                            System.out.print(lineText + UserMainUtils.paddingText(66, lineText) + "||");
                         } else if (page == UserController.maxPageListStockPorto(user)) {
                             String lineText = " [" + page + "/" + UserController.maxPageListStockPorto(user) + "] [PREV] SEBELUMNYA";
-                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                            System.out.print(lineText + UserMainUtils.paddingText(66, lineText) + "||");
                         } else {
                             String lineText = " [" + page + "/" + UserController.maxPageListStockPorto(user) + "] [PREV] SEBELUMNYA | [NEXT] SELANJUTNYA";
-                            System.out.print(lineText + MainUtils.paddingText(66, lineText) + "||");
+                            System.out.print(lineText + UserMainUtils.paddingText(66, lineText) + "||");
                         }
                     } else if (i == 18) {
                         System.out.print("==================================================================||");
@@ -362,18 +362,61 @@ public class UserView {
     public static void landingSimulationSbn(){
         System.out.println("||=====================================================================================||");
         System.out.println("||                                                                                     ||");
-        System.out.println("||                          TAMBAH DAN HAPUS WATCHLIST                                 ||");
-        System.out.println("||                                                                                     ||");
-        System.out.println("|| PERATURAN :                                                                         ||");
-        System.out.println("||                                                                                     ||");
-        System.out.println("||                                                                                     ||");
-        System.out.println("|| 1. INPUT KODE SAHAM UNTUK MEMASUKAN SAHAM PADA WATCHLIST                            ||");
-        System.out.println("|| 2. JIKA SUDAH MEMASUKAN SAHAM KE WATCHLIST DAN INPUT NAMA SAHAM LAGI AKAN           ||");
-        System.out.println("||    MENGHAPUS SAHAM DARI WATCHLIST                                                   ||");
-        System.out.println("|| 3. HANYA SAHAM YANG DAPAT DIMASUKAN PADA WATCHLIST, SBN TIDAK BISA                  ||");
-        System.out.println("|| 4. WATCHLIST HANYA MAKSIMAL 8 SAHAM                                                 ||");
+        System.out.println("||                     MASUKAN KODE SBN UNTUK SIMULASI                                 ||");
         System.out.println("||                                                                                     ||");
         System.out.println("||=====================================================================================||");
+    }
+
+    public static void viewSellStock(Users user){
+        int page = 1;
+        viewStockPortofolio(user, page);
+        System.out.println("||                                                                                     ||");
+        System.out.println("|| MASUKAN KODE SAHAM UNTUK MENJUAL                                                    ||");
+        System.out.println("||=====================================================================================||");
+        System.out.print("|| Masukan Kode : ");
+    }
+
+    public static void successSellStock(int remainingStocks, int totalSaleAmount, double sellPrice, double buyPrice, int lotQuantity){
+        String[] mainMenu = listMainMenu();
+        List<String> contentSuccessSell = new ArrayList<>();
+
+        String baseText = "HAI "+ getCurrentUser().getUsername() +", TRANSAKSI PENJUALAN MU SUKSES";
+        String fullLine = baseText + UserMainUtils.paddingText(66, baseText) + "||";
+        contentSuccessSell.add("==================================================================||");
+        contentSuccessSell.add("                                                                  ||");
+        contentSuccessSell.add(fullLine);
+        contentSuccessSell.add("                                                                  ||");
+        contentSuccessSell.add("==================================================================||");
+        contentSuccessSell.add("                                                                  ||");
+        contentSuccessSell.add("SISA SAHAM : "+ remainingStocks + UserMainUtils.paddingText(53, String.valueOf(remainingStocks)) +"||");
+        contentSuccessSell.add("------------------------------------------------------------------||");
+        contentSuccessSell.add("SAHAM YANG DIJUAL : "+ lotQuantity + UserMainUtils.paddingText(46, String.valueOf(lotQuantity)) +"||");
+        contentSuccessSell.add("------------------------------------------------------------------||");
+        contentSuccessSell.add("HARGA BELI : Rp. "+ UserMainUtils.formatRupiah((long) buyPrice) + UserMainUtils.paddingText(49, UserMainUtils.formatRupiah((long) buyPrice)) +"||");
+        contentSuccessSell.add("------------------------------------------------------------------||");
+        contentSuccessSell.add("HARGA JUAL : Rp. "+ UserMainUtils.formatRupiah((long) sellPrice) + UserMainUtils.paddingText(49, UserMainUtils.formatRupiah((long) sellPrice)) +"||");
+        contentSuccessSell.add("------------------------------------------------------------------||");
+        contentSuccessSell.add("HASIL PENJUALAN : Rp. "+ UserMainUtils.formatRupiah(totalSaleAmount) + UserMainUtils.paddingText(44, UserMainUtils.formatRupiah(totalSaleAmount)) +"||");
+        contentSuccessSell.add("                                                                  ||");
+        contentSuccessSell.add("==================================================================||");
+        contentSuccessSell.add("                 TERIMA KASIH SUDAH BERTRANSAKSI                  ||");
+        contentSuccessSell.add("==================================================================||");
+
+        UserMainUtils.clearScreen();
+        for(int i = 0; i < mainMenu.length; i++){
+            System.out.println(mainMenu[i] + contentSuccessSell.get(i));
+        }
+        System.out.println("||                 PESAN AKAN TERTUTUP OTOMATIS DALAM 3 DETIK                          ||");
+        System.out.println("||=====================================================================================||");
+        for(int i = 0; i < 3; i++){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Accounts loggedInAccount = Session.getCurrentUser();
+        Routes.userRoutes((Users) loggedInAccount);
     }
 
     public static void viewSimulationSbn(String code){
@@ -400,8 +443,8 @@ public class UserView {
         System.out.println("||     PORTOFOLIO  || 4   || PANI   || 10000    || +900+(9.89%)       || PROPERTY      ||");
         System.out.println("|| [8] SIMULASI    || 5   || WIFI   || 1800     || +10(+0.56%)        || TECHNOLOGY    ||");
         System.out.println("||     SBN         || 6   || CBDK   || 5950     || +875(+17.24%)      || INFRASTRUC    ||");
-        System.out.println("|| [0] LOGOUT      || 7   || ASII   || 4920     || +120(+2.50%)       || INDUSTRIAL    ||");
-        System.out.println("||                 || 8   || BBNI   || 4240     || -10(-0.24%)        || FINANCE       ||");
+        System.out.println("|| [9] JUAL SAHAM  || 7   || ASII   || 4920     || +120(+2.50%)       || INDUSTRIAL    ||");
+        System.out.println("|| [0] LOGOUT      || 8   || BBNI   || 4240     || -10(-0.24%)        || FINANCE       ||");
         System.out.println("||                 ||==================================================================||");
         System.out.println("||                 ||     INPUT NO UNTUK MELIHAT MAIN MENU & KODE SAHAM UNTUK DETAIL   ||");
         System.out.println("||=================||==================================================================||");

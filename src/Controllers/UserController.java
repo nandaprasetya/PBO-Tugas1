@@ -9,7 +9,7 @@ import Routes.Routes;
 import Securities.SBNs;
 import Securities.Securities;
 import Securities.Stocks;
-import Utils.MainUtils;
+import Utils.UserMainUtils;
 import View.UserView;
 import com.sun.tools.javac.Main;
 
@@ -50,13 +50,13 @@ public class UserController {
 
                     String codeText = watchlist.get(watchlistNumber - 1) + "   ||";
                     String nowPriceStr = String.valueOf((int) nowPrice);
-                    String pricePadding = MainUtils.paddingText(9, nowPriceStr);
+                    String pricePadding = UserMainUtils.paddingText(9, nowPriceStr);
                     String priceText = " " + (int) nowPrice + pricePadding + "||";
 
                     String fullChangeText = (nowPrice - lastPrice) > 0 ? "+" + (int) (nowPrice - lastPrice) + "(" + stock.getPriceChangePercentage() + "%)" : (int) (nowPrice - lastPrice) + "(" + stock.getPriceChangePercentage() + "%)";
-                    String paddingPercentage = MainUtils.paddingText(19, fullChangeText);
+                    String paddingPercentage = UserMainUtils.paddingText(19, fullChangeText);
                     String percentageText = " " + fullChangeText + paddingPercentage + "||";
-                    String paddingSector = MainUtils.paddingText(14, stock.getSector());
+                    String paddingSector = UserMainUtils.paddingText(14, stock.getSector());
                     String sectorText = " " + stock.getSector() + paddingSector + "||";
                     String fullLineStock = " " + watchlistNumber + "   || " + codeText + priceText + percentageText + sectorText;
                     watchlistNumber += 1;
@@ -89,18 +89,18 @@ public class UserController {
             String pricePercentage = stock.getPriceChangePercentage();
             String sector = stock.getSector();
 
-            String nowPriceStr = MainUtils.formatRupiah ((int) price);
-            String pricePadding = MainUtils.paddingText(11, nowPriceStr);
+            String nowPriceStr = UserMainUtils.formatRupiah ((int) price);
+            String pricePadding = UserMainUtils.paddingText(11, nowPriceStr);
             String priceText = " " + nowPriceStr + pricePadding + "||";
 
             String fullChangeText = priceChange > 0 ? "+" + (int) priceChange + "(" + pricePercentage + "%)" : (int) priceChange + "(" + pricePercentage + "%)";
-            String paddingPercentage = MainUtils.paddingText(17, fullChangeText);
+            String paddingPercentage = UserMainUtils.paddingText(17, fullChangeText);
             String percentageText = " " + fullChangeText + paddingPercentage + "||";
 
-            String paddingSector = MainUtils.paddingText(14, stock.getSector());
+            String paddingSector = UserMainUtils.paddingText(14, stock.getSector());
             String sectorText = " " + sector + paddingSector + "||";
 
-            String fullLineStock = " " + noStock  + MainUtils.paddingText(4, String.valueOf(noStock)) + "|| " + " " + code + "  ||" + priceText + percentageText + sectorText;
+            String fullLineStock = " " + noStock  + UserMainUtils.paddingText(4, String.valueOf(noStock)) + "|| " + " " + code + "  ||" + priceText + percentageText + sectorText;
             contentListStock.add(fullLineStock);
             noStock += 1;
         }
@@ -174,12 +174,12 @@ public class UserController {
             String interestRate = String.format("%.2f", sbn.getInterestRate());
             LocalDate maturityDate = sbn.getMaturityDate();
 
-            String pricePadding = MainUtils.paddingText(11, MainUtils.formatRupiah((int) price));
-            String quotaPadding = MainUtils.paddingText(7, String.valueOf(quota));
-            String interestRatePadding = MainUtils.paddingText(6, interestRate);
-            String maturityDatePadding = MainUtils.paddingText(12, maturityDate.toString());
+            String pricePadding = UserMainUtils.paddingText(11, UserMainUtils.formatRupiah((int) price));
+            String quotaPadding = UserMainUtils.paddingText(7, String.valueOf(quota));
+            String interestRatePadding = UserMainUtils.paddingText(6, interestRate);
+            String maturityDatePadding = UserMainUtils.paddingText(12, maturityDate.toString());
 
-            String sbnText = " " + noSbn + MainUtils.paddingText(4, String.valueOf(noSbn)) +"|| " + sbn.getCode() + "   || " + MainUtils.formatRupiah ((int) price) + pricePadding + "|| " + quota + quotaPadding + "|| " + interestRate + "%" + interestRatePadding + "|| " + maturityDate + maturityDatePadding + "||";
+            String sbnText = " " + noSbn + UserMainUtils.paddingText(4, String.valueOf(noSbn)) +"|| " + sbn.getCode() + "   || " + UserMainUtils.formatRupiah ((int) price) + pricePadding + "|| " + quota + quotaPadding + "|| " + interestRate + "%" + interestRatePadding + "|| " + maturityDate + maturityDatePadding + "||";
             noSbn += 1;
             listSbn.add(sbnText);
         }
@@ -195,7 +195,7 @@ public class UserController {
         boolean isSbn = false;
         boolean isLoop = false;
         do {
-            MainUtils.clearScreen();
+            UserMainUtils.clearScreen();
             UserView.viewBuy(user);
             if(isLoop == true){
                 System.out.println("||=====================================================================================||");
@@ -211,22 +211,22 @@ public class UserController {
                     int quantity = scanner.nextInt();
                     double total = stock.getCurrentPrice() * quantity * 100;
                     if (user.getBalance() >= total) {
-                        MainUtils.clearScreen();
+                        UserMainUtils.clearScreen();
                         user.setBalance(user.getBalance() - total);
                         user.addToPortfolio(stock, quantity, stock.getCurrentPrice());
                         for(int i = 5; i >= 1; i--) {
-                            MainUtils.clearScreen();
+                            UserMainUtils.clearScreen();
                             System.out.println("||=====================================================================================||");
                             System.out.println("||                                                                                     ||");
                             System.out.println("||                               TRANSAKSI BERHASIL                                    ||");
                             System.out.println("||                                                                                     ||");
                             System.out.println("||=====================================================================================||");
-                            System.out.println("|| Anda Membeli : " + stockCode + MainUtils.paddingText(69, stockCode) + "||");
-                            System.out.println("|| Jumlah : " + quantity + " LOT" + MainUtils.paddingText(71, String.valueOf(quantity)) + "||");
-                            System.out.println("|| Harga Per Lembar : Rp. " + MainUtils.formatRupiah((long) stock.getCurrentPrice()) + MainUtils.paddingText(61, MainUtils.formatRupiah((long) stock.getCurrentPrice())) + "||");
-                            System.out.println("|| Total Pembayaran : Rp. " + MainUtils.formatRupiah((long) total) + MainUtils.paddingText(61, MainUtils.formatRupiah((long) total)) + "||");
+                            System.out.println("|| Anda Membeli : " + stockCode + UserMainUtils.paddingText(69, stockCode) + "||");
+                            System.out.println("|| Jumlah : " + quantity + " LOT" + UserMainUtils.paddingText(71, String.valueOf(quantity)) + "||");
+                            System.out.println("|| Harga Per Lembar : Rp. " + UserMainUtils.formatRupiah((long) stock.getCurrentPrice()) + UserMainUtils.paddingText(61, UserMainUtils.formatRupiah((long) stock.getCurrentPrice())) + "||");
+                            System.out.println("|| Total Pembayaran : Rp. " + UserMainUtils.formatRupiah((long) total) + UserMainUtils.paddingText(61, UserMainUtils.formatRupiah((long) total)) + "||");
                             System.out.println("||=====================================================================================||");
-                            System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                            System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + UserMainUtils.paddingText(49, "i") + "||");
                             System.out.println("||=====================================================================================||");
                             try {
                                 Thread.sleep(1000);
@@ -238,13 +238,13 @@ public class UserController {
                         Routes.userRoutes((Users) loggedInAccount);
                     }else{
                         for(int i = 5; i >= 1; i--) {
-                            MainUtils.clearScreen();
+                            UserMainUtils.clearScreen();
                             System.out.println("||=====================================================================================||");
                             System.out.println("||                                                                                     ||");
                             System.out.println("||                          TRANSAKSI GAGAL, SALDO TIDAK CUKUP                         ||");
                             System.out.println("||                                                                                     ||");
                             System.out.println("||=====================================================================================||");
-                            System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                            System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + UserMainUtils.paddingText(49, "i") + "||");
                             System.out.println("||=====================================================================================||");
                             try {
                                 Thread.sleep(1000);
@@ -270,18 +270,18 @@ public class UserController {
                             user.setBalance(user.getBalance() - total);
                             user.addToPortfolio(sbn, quantity, sbn.getPrice());
                             for(int i = 5; i >= 1; i--) {
-                                MainUtils.clearScreen();
+                                UserMainUtils.clearScreen();
                                 System.out.println("||=====================================================================================||");
                                 System.out.println("||                                                                                     ||");
                                 System.out.println("||                               TRANSAKSI BERHASIL                                    ||");
                                 System.out.println("||                                                                                     ||");
                                 System.out.println("||=====================================================================================||");
-                                System.out.println("|| Anda Membeli : " + stockCode + MainUtils.paddingText(69, stockCode) + "||");
-                                System.out.println("|| Jumlah : " + quantity + " UNIT" + MainUtils.paddingText(70, String.valueOf(quantity)) + "||");
-                                System.out.println("|| Harga Per Unit : Rp. " + MainUtils.formatRupiah((long) sbn.getPrice()) + MainUtils.paddingText(63, MainUtils.formatRupiah((long) sbn.getPrice())) + "||");
-                                System.out.println("|| Total Pembayaran : Rp. " + MainUtils.formatRupiah((long) total) + MainUtils.paddingText(61, MainUtils.formatRupiah((long) total)) + "||");
+                                System.out.println("|| Anda Membeli : " + stockCode + UserMainUtils.paddingText(69, stockCode) + "||");
+                                System.out.println("|| Jumlah : " + quantity + " UNIT" + UserMainUtils.paddingText(70, String.valueOf(quantity)) + "||");
+                                System.out.println("|| Harga Per Unit : Rp. " + UserMainUtils.formatRupiah((long) sbn.getPrice()) + UserMainUtils.paddingText(63, UserMainUtils.formatRupiah((long) sbn.getPrice())) + "||");
+                                System.out.println("|| Total Pembayaran : Rp. " + UserMainUtils.formatRupiah((long) total) + UserMainUtils.paddingText(61, UserMainUtils.formatRupiah((long) total)) + "||");
                                 System.out.println("||=====================================================================================||");
-                                System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                                System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + UserMainUtils.paddingText(49, "i") + "||");
                                 System.out.println("||=====================================================================================||");
                                 try {
                                     Thread.sleep(1000);
@@ -298,7 +298,7 @@ public class UserController {
                                 System.out.println("||                          TRANSAKSI GAGAL, SALDO TIDAK CUKUP                         ||");
                                 System.out.println("||                                                                                     ||");
                                 System.out.println("||=====================================================================================||");
-                                System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM "+ i + MainUtils.paddingText(49, "i") +"||");
+                                System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM "+ i + UserMainUtils.paddingText(49, "i") +"||");
                                 System.out.println("||=====================================================================================||");
                                 try {
                                     Thread.sleep(1000);
@@ -311,13 +311,13 @@ public class UserController {
                         }
                     } else{
                         for(int i = 5; i >= 1; i--) {
-                            MainUtils.clearScreen();
+                            UserMainUtils.clearScreen();
                             System.out.println("||=====================================================================================||");
                             System.out.println("||                                                                                     ||");
                             System.out.println("||                     TRANSAKSI GAGAL, MELEBIHI KUOTA NASIONAL                        ||");
                             System.out.println("||                                                                                     ||");
                             System.out.println("||=====================================================================================||");
-                            System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM "+ i + MainUtils.paddingText(49, "i") +"||");
+                            System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM "+ i + UserMainUtils.paddingText(49, "i") +"||");
                             System.out.println("||=====================================================================================||");
                             try {
                                 Thread.sleep(1000);
@@ -363,7 +363,7 @@ public class UserController {
 
     public static void topUpBalance(Users user) {
         System.out.println("||=====================================================================================||");
-        System.out.println("|| HALLO" + getCurrentUser().getUsername() + ", AYO TOP UP UNTUK INVESTASI" + MainUtils.paddingText(51, getCurrentUser().getUsername()) + "||");
+        System.out.println("|| HALLO" + getCurrentUser().getUsername() + ", AYO TOP UP UNTUK INVESTASI" + UserMainUtils.paddingText(51, getCurrentUser().getUsername()) + "||");
         System.out.println("||=====================================================================================||");
         System.out.println("|| SETIAP TOPUP MAKSIMAL Rp. 10.000.000.000                                            ||");
         System.out.println("||=====================================================================================||");
@@ -371,13 +371,13 @@ public class UserController {
         double amount = scanner.nextDouble();
         if (amount > 10000000000.0) {
             for (int i = 5; i >= 1; i--) {
-                MainUtils.clearScreen();
+                UserMainUtils.clearScreen();
                 System.out.println("||=====================================================================================||");
                 System.out.println("||                                                                                     ||");
                 System.out.println("||                        TOPUP GAGAL, MELEBIHI BATAS MAKSIMAL                         ||");
                 System.out.println("||                                                                                     ||");
                 System.out.println("||=====================================================================================||");
-                System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + UserMainUtils.paddingText(49, "i") + "||");
                 System.out.println("||=====================================================================================||");
                 try {
                     Thread.sleep(1000);
@@ -391,13 +391,13 @@ public class UserController {
             if(amount > 0){
                 user.addBalance(amount);
                 for (int i = 5; i >= 1; i--) {
-                    MainUtils.clearScreen();
+                    UserMainUtils.clearScreen();
                     System.out.println("||=====================================================================================||");
                     System.out.println("||                                                                                     ||");
                     System.out.println("||                        TOPUP BERHASIL, AYO MULAI INVESTASI                          ||");
                     System.out.println("||                                                                                     ||");
                     System.out.println("||=====================================================================================||");
-                    System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                    System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + UserMainUtils.paddingText(49, "i") + "||");
                     System.out.println("||=====================================================================================||");
                     try {
                         Thread.sleep(1000);
@@ -409,13 +409,13 @@ public class UserController {
                 Routes.userRoutes((Users) loggedInAccount);
             }else{
                 for (int i = 5; i >= 1; i--) {
-                    MainUtils.clearScreen();
+                    UserMainUtils.clearScreen();
                     System.out.println("||=====================================================================================||");
                     System.out.println("||                                                                                     ||");
                     System.out.println("||                        TOPUP GAGAL NOMINAL TIDAK BOLEH NOL                          ||");
                     System.out.println("||                                                                                     ||");
                     System.out.println("||=====================================================================================||");
-                    System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                    System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + UserMainUtils.paddingText(49, "i") + "||");
                     System.out.println("||=====================================================================================||");
                     try {
                         Thread.sleep(1000);
@@ -431,7 +431,7 @@ public class UserController {
 
     public static void withdraw(Users user){
         System.out.println("||=====================================================================================||");
-        System.out.println("|| HALLO" + getCurrentUser().getUsername() + ", AYO TOP UP UNTUK INVESTASI" + MainUtils.paddingText(51, getCurrentUser().getUsername()) + "||");
+        System.out.println("|| HALLO" + getCurrentUser().getUsername() + ", AYO TOP UP UNTUK INVESTASI" + UserMainUtils.paddingText(51, getCurrentUser().getUsername()) + "||");
         System.out.println("||=====================================================================================||");
         System.out.println("|| SETIAP PENARIKAN MAKSIMAL Rp. 10.000.000.000                                        ||");
         System.out.println("||=====================================================================================||");
@@ -439,13 +439,13 @@ public class UserController {
         double amount = scanner.nextDouble();
         if (amount > 10000000000.0) {
             for (int i = 5; i >= 1; i--) {
-                MainUtils.clearScreen();
+                UserMainUtils.clearScreen();
                 System.out.println("||=====================================================================================||");
                 System.out.println("||                                                                                     ||");
                 System.out.println("||                    PENARIKAN GAGAL, MELEBIHI BATAS MAKSIMAL                         ||");
                 System.out.println("||                                                                                     ||");
                 System.out.println("||=====================================================================================||");
-                System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + UserMainUtils.paddingText(49, "i") + "||");
                 System.out.println("||=====================================================================================||");
                 try {
                     Thread.sleep(1000);
@@ -459,13 +459,13 @@ public class UserController {
             if(amount > 0){
                 user.withdrawBalance(amount);
                 for (int i = 5; i >= 1; i--) {
-                    MainUtils.clearScreen();
+                    UserMainUtils.clearScreen();
                     System.out.println("||=====================================================================================||");
                     System.out.println("||                                                                                     ||");
                     System.out.println("||                    PENARIKAN BERHASIL, AYO MULAI INVESTASI                          ||");
                     System.out.println("||                                                                                     ||");
                     System.out.println("||=====================================================================================||");
-                    System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                    System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + UserMainUtils.paddingText(49, "i") + "||");
                     System.out.println("||=====================================================================================||");
                     try {
                         Thread.sleep(1000);
@@ -477,13 +477,13 @@ public class UserController {
                 Routes.userRoutes((Users) loggedInAccount);
             }else{
                 for (int i = 5; i >= 1; i--) {
-                    MainUtils.clearScreen();
+                    UserMainUtils.clearScreen();
                     System.out.println("||=====================================================================================||");
                     System.out.println("||                                                                                     ||");
                     System.out.println("||                    PENARIKAN GAGAL NOMINAL TIDAK BOLEH NOL                          ||");
                     System.out.println("||                                                                                     ||");
                     System.out.println("||=====================================================================================||");
-                    System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + MainUtils.paddingText(49, "i") + "||");
+                    System.out.println("|| PESAN AKAN TERTUTUP OTOMATIS DALAM " + i + UserMainUtils.paddingText(49, "i") + "||");
                     System.out.println("||=====================================================================================||");
                     try {
                         Thread.sleep(1000);
@@ -515,7 +515,7 @@ public class UserController {
                 if (item.getSecurities() instanceof SBNs sbn) {
                     String monthInterest = String.valueOf( (int) (((sbn.getInterestRate() / 12) / 100 * (item.getQuantity() * item.getPurchasePrice())) * 0.9));
                     int quantity = item.getQuantity();
-                    String stocksText = "  " + no + MainUtils.paddingText(3, String.valueOf(no)) +"|| " + item.getSecurities().getCode() + " || " + monthInterest + MainUtils.paddingText(12, monthInterest) + "|| " + quantity + MainUtils.paddingText(8, String.valueOf(quantity)) + "|| " + sbn.getInterestRate() + "%" + MainUtils.paddingText(6, String.valueOf(sbn.getInterestRate())) + "|| " + sbn.getMaturityDate() + "  ||";
+                    String stocksText = "  " + no + UserMainUtils.paddingText(3, String.valueOf(no)) +"|| " + item.getSecurities().getCode() + " || " + monthInterest + UserMainUtils.paddingText(12, monthInterest) + "|| " + quantity + UserMainUtils.paddingText(8, String.valueOf(quantity)) + "|| " + sbn.getInterestRate() + "%" + UserMainUtils.paddingText(6, String.valueOf(sbn.getInterestRate())) + "|| " + sbn.getMaturityDate() + "  ||";
                     listSbn.add(stocksText);
                 }
                 no++;
@@ -546,13 +546,13 @@ public class UserController {
                 if (item.getSecurities() instanceof Stocks stock) {
                     ArrayList<Double> history = stock.getPriceHistory();
                     double latestPrice = history.isEmpty() ? stock.getPrice() : history.getLast();
-                    String stockCapital = MainUtils.formatRupiah((long) item.getPurchasePrice() * 100 * item.getQuantity());
-                    String paddingStockCapital = MainUtils.paddingText(14, stockCapital);
-                    String currentStockValue = MainUtils.formatRupiah((long) (item.getQuantity() * 100 * history.getLast()));
-                    String paddingCurrentStockValue = MainUtils.paddingText(16, currentStockValue);
+                    String stockCapital = UserMainUtils.formatRupiah((long) item.getPurchasePrice() * 100 * item.getQuantity());
+                    String paddingStockCapital = UserMainUtils.paddingText(14, stockCapital);
+                    String currentStockValue = UserMainUtils.formatRupiah((long) (item.getQuantity() * 100 * history.getLast()));
+                    String paddingCurrentStockValue = UserMainUtils.paddingText(16, currentStockValue);
                     int quatity = item.getQuantity() * 100;
-                    String paddingQuantity = MainUtils.paddingText(13, String.valueOf(quatity));
-                    String stocksText = " " + no + MainUtils.paddingText(3, String.valueOf(no)) + "|| " + item.getSecurities().getCode() + "   || " + stockCapital + paddingStockCapital + "|| " + currentStockValue + paddingCurrentStockValue + "|| " + quatity + paddingQuantity + "||";
+                    String paddingQuantity = UserMainUtils.paddingText(13, String.valueOf(quatity));
+                    String stocksText = " " + no + UserMainUtils.paddingText(3, String.valueOf(no)) + "|| " + item.getSecurities().getCode() + "   || " + stockCapital + paddingStockCapital + "|| " + currentStockValue + paddingCurrentStockValue + "|| " + quatity + paddingQuantity + "||";
                     listStock.add(stocksText);
                     no++;
                 }
@@ -568,7 +568,7 @@ public class UserController {
     public static List<String> SimulationSbn(String code){
         List<String> contentSimulationSbn = new ArrayList<>();
         contentSimulationSbn.add("==================================================================||");
-        contentSimulationSbn.add(" HALLO, " + getCurrentUser().getUsername() + MainUtils.paddingText(58, getCurrentUser().getUsername()) + "||");
+        contentSimulationSbn.add(" HALLO, " + getCurrentUser().getUsername() + UserMainUtils.paddingText(58, getCurrentUser().getUsername()) + "||");
         for(SBNs sbn: SecuritiesData.getSbnsList()){
             if(sbn.getCode().equalsIgnoreCase(code)){
                 int sbnrate = (int) (((sbn.getInterestRate() / 12) / 100 * sbn.getPrice()) * 0.9);
@@ -577,23 +577,100 @@ public class UserController {
                 int totalInvest = (int) sbn.simulateProfit(sbn.getInterestRate(), 1, totalMonths);
                 contentSimulationSbn.add("                                                                  ||");
                 contentSimulationSbn.add("==================================================================||");
-                contentSimulationSbn.add(" HASIL SIMULASI SBN : " + code + MainUtils.paddingText(44, code) + "||");
+                contentSimulationSbn.add(" HASIL SIMULASI SBN : " + code + UserMainUtils.paddingText(44, code) + "||");
                 contentSimulationSbn.add("==================================================================||");
-                contentSimulationSbn.add(" BUNGA/TAHUN : " + sbn.getInterestRate() + "%" + MainUtils.paddingText(50, String.valueOf(sbn.getInterestRate())) + "||");
-                contentSimulationSbn.add(" BUNGA/PERBULAN : " + String.format("%.2f", sbn.getInterestRate() / 12) + "%" + MainUtils.paddingText(47, String.format("%.2f", sbn.getInterestRate() / 12)) + "||");
+                contentSimulationSbn.add(" BUNGA/TAHUN : " + sbn.getInterestRate() + "%" + UserMainUtils.paddingText(50, String.valueOf(sbn.getInterestRate())) + "||");
+                contentSimulationSbn.add(" BUNGA/PERBULAN : " + String.format("%.2f", sbn.getInterestRate() / 12) + "%" + UserMainUtils.paddingText(47, String.format("%.2f", sbn.getInterestRate() / 12)) + "||");
                 contentSimulationSbn.add("------------------------------------------------------------------||");
-                contentSimulationSbn.add(" HARGA : Rp. " + MainUtils.formatRupiah( (int) sbn.getPrice()) + MainUtils.paddingText(53, String.valueOf(sbn.getPrice())) + "||");
+                contentSimulationSbn.add(" HARGA : Rp. " + UserMainUtils.formatRupiah( (int) sbn.getPrice()) + UserMainUtils.paddingText(53, String.valueOf(sbn.getPrice())) + "||");
                 contentSimulationSbn.add("------------------------------------------------------------------||");
-                contentSimulationSbn.add(" JATUH TEMPO : " + sbn.getMaturityDate() + MainUtils.paddingText(51, String.valueOf(sbn.getMaturityDate())) + "||");
+                contentSimulationSbn.add(" JATUH TEMPO : " + sbn.getMaturityDate() + UserMainUtils.paddingText(51, String.valueOf(sbn.getMaturityDate())) + "||");
                 contentSimulationSbn.add("------------------------------------------------------------------||");
-                contentSimulationSbn.add(" KUPON PER-BULAN (1 UNIT) : Rp. " + MainUtils.formatRupiah(sbnrate) + MainUtils.paddingText(33, String.valueOf(sbnrate)) + "||");
+                contentSimulationSbn.add(" KUPON PER-BULAN (1 UNIT) : Rp. " + UserMainUtils.formatRupiah(sbnrate) + UserMainUtils.paddingText(33, String.valueOf(sbnrate)) + "||");
                 contentSimulationSbn.add("------------------------------------------------------------------||");
-                contentSimulationSbn.add(" HASIL INVESTASI HINGGA JATUH TEMPO : Rp. " +  MainUtils.formatRupiah(totalInvest) + MainUtils.paddingText(24, MainUtils.formatRupiah(totalInvest)) + "||");
+                contentSimulationSbn.add(" HASIL INVESTASI HINGGA JATUH TEMPO : Rp. " +  UserMainUtils.formatRupiah(totalInvest) + UserMainUtils.paddingText(24, UserMainUtils.formatRupiah(totalInvest)) + "||");
                 contentSimulationSbn.add("==================================================================||");
                 contentSimulationSbn.add("                  INPUT KODE SBN UNTUK SIMULASI                   ||");
                 contentSimulationSbn.add("==================================================================||");
+                return contentSimulationSbn;
             }
         }
+
+        contentSimulationSbn.add("                                                                  ||");
+        contentSimulationSbn.add("==================================================================||");
+        contentSimulationSbn.add("                                                                  ||");
+        contentSimulationSbn.add("                KODE SEBELUMNYA BUKANLAH KODE SBN                 ||");
+        for(int i = 0; i < 10; i++){
+            contentSimulationSbn.add("                                                                  ||");
+        }
+        contentSimulationSbn.add("==================================================================||");
+        contentSimulationSbn.add("             MASUKAN KODE SESUAI DENGAN SBN YANG ADA              ||");
+        contentSimulationSbn.add("==================================================================||");
         return contentSimulationSbn;
+    }
+
+    public static void sellStock(String code, Users user){
+        ArrayList<PortfolioItem> items = Users.getPortfolio();
+        boolean found = false;
+        for(PortfolioItem item : new ArrayList<>(items)){
+            if(item.getSecurities().getCode().equalsIgnoreCase(code)){
+                System.out.println("||=====================================================================================||");
+                System.out.println("||                                                                                     ||");
+                System.out.println("|| ANDA AKAN MENJUAL SAHAM : " + code + UserMainUtils.paddingText(58, code) + "||");
+                System.out.println("|| TOTAL SAHAM YANG DIMILIKI : " + code + UserMainUtils.paddingText(55, String.valueOf(item.getQuantity())) + "||");
+                System.out.println("||                                                                                     ||");
+                System.out.println("||=====================================================================================||");
+                System.out.print("|| Masukan Jumlah LOT : ");
+                int lotQuantity = scanner.nextInt();
+                if(lotQuantity > item.getQuantity() || lotQuantity < 0){
+                    UserMainUtils.clearScreen();
+                    System.out.println("||=====================================================================================||");
+                    System.out.println("||              TRANSAKSI PENJUALAN GAGAL, SAHAM YANG DIMILIKI KURANG                  ||");
+                    System.out.println("||=====================================================================================||");
+                    System.out.println("||                 PESAN AKAN TERTUTUP OTOMATIS DALAM 3 DETIK                          ||");
+                    System.out.println("||=====================================================================================||");
+                    for(int i = 0; i < 3; i++){
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Accounts loggedInAccount = Session.getCurrentUser();
+                    Routes.userRoutes((Users) loggedInAccount);
+                }else{
+                    if (item.getSecurities() instanceof Stocks stock) {
+                        ArrayList<Double> history = stock.getPriceHistory();
+                        double sellPrice = history.isEmpty() ? stock.getPrice() : history.getLast();
+                        double buyPrice = item.getPurchasePrice();
+                        double total = lotQuantity * 100 * sellPrice;
+                        int remainingStock = item.getQuantity() - lotQuantity;
+                        item.decreaseQuantity(lotQuantity);
+                        user.setBalance(user.getBalance() + total);
+                        if (item.getQuantity() == 0) {
+                            items.remove(item);
+                        }
+                        UserView.successSellStock(remainingStock, (int) total, sellPrice, buyPrice, lotQuantity);
+                    }
+                }
+                break;
+            }
+            if (!found) {
+                System.out.println("||=====================================================================================||");
+                System.out.println("||                           SAHAM TIDAK DAPAT DITEMUKAN                               ||");
+                System.out.println("||=====================================================================================||");
+                System.out.println("||                 PESAN AKAN TERTUTUP OTOMATIS DALAM 3 DETIK                          ||");
+                System.out.println("||=====================================================================================||");
+                for(int i = 0; i < 3; i++){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Accounts loggedInAccount = Session.getCurrentUser();
+                Routes.userRoutes((Users) loggedInAccount);
+            }
+        }
     }
 }
