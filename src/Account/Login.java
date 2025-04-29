@@ -42,7 +42,7 @@ public class Login {
                 System.out.println("||==================================================================||");
                 System.out.println("||          LOGIN BERHASIL! SELAMAT DATANG " + username.toUpperCase() + UserMainUtils.paddingText(25, username) + "||");
                 System.out.println("||==================================================================||");
-                return acc; // langsung return begitu ketemu akun
+                return acc;
             }
         }
 
