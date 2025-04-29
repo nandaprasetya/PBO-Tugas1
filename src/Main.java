@@ -22,7 +22,7 @@ public class Main {
                 if (user instanceof Users) {
                     Routes.userRoutes((Users) user);
                 } else if (user instanceof Admin) {
-                    AdminController.start(scanner);
+                    Routes.startAdmin(scanner);
                 }
             }
             System.out.println("||==================================================================||");
