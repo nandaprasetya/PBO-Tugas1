@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Users extends Accounts{
     private double balance;
-    private static ArrayList<PortfolioItem> portfolio;
+    private ArrayList<PortfolioItem> portfolio;
     private static List<String> watchlist = new ArrayList<>();
 
     public Users(String id, String username, String password, String email, String role, double balance, ArrayList<PortfolioItem> portfolio) {
@@ -48,7 +48,7 @@ public class Users extends Accounts{
         this.portfolio.add(new PortfolioItem(securities, quantity, price));
     }
 
-    public static ArrayList<PortfolioItem> getPortfolio() {
+    public ArrayList<PortfolioItem> getPortfolio() {
         return portfolio;
     }
 

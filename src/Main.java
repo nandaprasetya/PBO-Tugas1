@@ -7,14 +7,18 @@ import Account.Users;
 import Account.Admin;
 import Utils.UserMainUtils;
 
+import java.util.ArrayList;
 import java.util.Scanner;
-
 public class Main {
+static ArrayList<Accounts> allUsers = new ArrayList<>();
     public static void main(String[] args) {
+        Users nanda = new Users("US1", "Nanda", "pass123", "nanda@unud.ac.id", "USER", 10000000000.0, null);
+        allUsers.add(nanda);
+        allUsers.add(new Admin("ADM1", "Admin Devi", "admin123", "devi@unud.ac.id","ADMIN"));
         Scanner scanner = new Scanner(System.in);
         while(true){
             // Get the user from login and also set it in the session
-            Accounts user = Login.viewLogin(scanner);
+            Accounts user = Login.viewLogin(scanner, allUsers);
 
             if (user == null) {
                 Routes.loginFailedView();

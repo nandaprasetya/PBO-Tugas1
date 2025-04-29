@@ -222,7 +222,7 @@ public class UserView {
         contentBalance.add("                                                                  ||");
         contentBalance.add("==================================================================||");
         contentBalance.add("                                                                  ||");
-        contentBalance.add(" NILAI INVESTASI SAHAM : Rp. "+ UserMainUtils.formatRupiah(UserController.getStockBalance()) + UserMainUtils.paddingText(37, UserMainUtils.formatRupiah(UserController.getStockBalance())) +"||");
+        contentBalance.add(" NILAI INVESTASI SAHAM : Rp. "+ UserMainUtils.formatRupiah(UserController.getStockBalance(user)) + UserMainUtils.paddingText(37, UserMainUtils.formatRupiah(UserController.getStockBalance(user))) +"||");
         contentBalance.add(" NILAI INVESTASI SBN   : Rp. "+ UserMainUtils.formatRupiah(UserController.getSbnBalance(user)) + UserMainUtils.paddingText(37, UserMainUtils.formatRupiah(UserController.getSbnBalance(user))) +"||");
         contentBalance.add("                                                                  ||");
         contentBalance.add("==================================================================||");
