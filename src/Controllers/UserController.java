@@ -331,7 +331,7 @@ public class UserController {
                 }
             }
             isLoop = true;
-        }while (!isStocks && isSbn == false);
+        }while (!isStocks && !isSbn);
     }
 
     public static int getStockBalance(){
@@ -614,6 +614,7 @@ public class UserController {
         boolean found = false;
         for(PortfolioItem item : new ArrayList<>(items)){
             if(item.getSecurities().getCode().equalsIgnoreCase(code)){
+                found = true;
                 System.out.println("||=====================================================================================||");
                 System.out.println("||                                                                                     ||");
                 System.out.println("|| ANDA AKAN MENJUAL SAHAM : " + code + UserMainUtils.paddingText(58, code) + "||");
@@ -627,17 +628,7 @@ public class UserController {
                     System.out.println("||=====================================================================================||");
                     System.out.println("||              TRANSAKSI PENJUALAN GAGAL, SAHAM YANG DIMILIKI KURANG                  ||");
                     System.out.println("||=====================================================================================||");
-                    System.out.println("||                 PESAN AKAN TERTUTUP OTOMATIS DALAM 3 DETIK                          ||");
-                    System.out.println("||=====================================================================================||");
-                    for(int i = 0; i < 3; i++){
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    Accounts loggedInAccount = Session.getCurrentUser();
-                    Routes.userRoutes((Users) loggedInAccount);
+                    UserMainUtils.threeSecondClodeMessage();
                 }else{
                     if (item.getSecurities() instanceof Stocks stock) {
                         ArrayList<Double> history = stock.getPriceHistory();
@@ -655,22 +646,53 @@ public class UserController {
                 }
                 break;
             }
-            if (!found) {
+        }
+        if (!found) {
+            System.out.println("||=====================================================================================||");
+            System.out.println("||                           SAHAM TIDAK DAPAT DITEMUKAN                               ||");
+            System.out.println("||=====================================================================================||");
+            UserMainUtils.threeSecondClodeMessage();
+        }
+    }
+
+    public static void manageWatchlist(Users user, String stockCode) {
+        List<String> watchlist = user.getWatchlist();
+
+        boolean isValidStock = false;
+        for (Stocks stock : SecuritiesData.getStocksList()) {
+            if (stock.getCode().equalsIgnoreCase(stockCode)) {
+                isValidStock = true;
+                break;
+            }
+        }
+
+        if (!isValidStock) {
+            System.out.println("||=====================================================================================||");
+            System.out.println("||        KODE SAHAM TIDAK VALID ATAU BUKAN MERUPAKAN SAHAM YANG TERDAFTAR             ||");
+            System.out.println("||=====================================================================================||");
+            UserMainUtils.threeSecondClodeMessage();
+        }
+
+        if (watchlist.contains(stockCode.toUpperCase())) {
+            watchlist.remove(stockCode.toUpperCase());
+            System.out.println("||=====================================================================================||");
+            System.out.println("||                  SAHAM " + stockCode + " BERHASIL DIHAPUS DARI WATCHLIST                         ||");
+            System.out.println("||=====================================================================================||");
+            UserMainUtils.threeSecondClodeMessage();
+        } else {
+            if (watchlist.size() >= 8) {
                 System.out.println("||=====================================================================================||");
-                System.out.println("||                           SAHAM TIDAK DAPAT DITEMUKAN                               ||");
+                System.out.println("||         WATCHLIST PENUH! MAKSIMAL HANYA 8 SAHAM DI WATCHLIST                        ||");
                 System.out.println("||=====================================================================================||");
-                System.out.println("||                 PESAN AKAN TERTUTUP OTOMATIS DALAM 3 DETIK                          ||");
+                UserMainUtils.threeSecondClodeMessage();
+            } else {
+                watchlist.add(stockCode.toUpperCase());
                 System.out.println("||=====================================================================================||");
-                for(int i = 0; i < 3; i++){
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                Accounts loggedInAccount = Session.getCurrentUser();
-                Routes.userRoutes((Users) loggedInAccount);
+                System.out.println("||                  SAHAM " + stockCode + " BERHASIL DITAMBAHKAN KE WATCHLIST                       ||");
+                System.out.println("||=====================================================================================||");
+                UserMainUtils.threeSecondClodeMessage();
             }
         }
     }
+
 }

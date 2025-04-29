@@ -1,5 +1,6 @@
 package Routes;
 
+import Account.Session;
 import Account.Users;
 import Controllers.UserController;
 import Controllers.AdminController;
@@ -9,13 +10,13 @@ import Securities.Stocks;
 import Utils.UserMainUtils;
 import View.AdminView;
 import View.UserView;
+import com.sun.tools.javac.Main;
 
 import java.util.Scanner;
 
 public class Routes {
     public static void userRoutes(Users user){
         Scanner scanner = new Scanner(System.in);
-        boolean running = true;
         UserMainUtils.clearScreen();
         UserView.userMainMenu();
         UserView.lineInput();
@@ -87,7 +88,6 @@ public class Routes {
                     }else if(choice.equals("12")){
                         UserController.withdraw(user);
                     }
-//                    running = false;
                 }
                 case "5" -> {
                     int page = 1;
@@ -156,14 +156,25 @@ public class Routes {
                     }
                 }
                 case "8" -> {
-                    UserView.viewSellStock(user);
+                    do{
+                        UserView.viewSellStock(user);
+                        choice = scanner.nextLine();
+                        if(!choice.matches("[0-9]")){
+                            UserController.sellStock(choice, user);
+                        }
+                    }while(!choice.matches("[0-9]"));
+                }
+                case "9" -> {
+                    UserView.viewLandingManageWatchlist();
+                    UserView.lineInput();
                     choice = scanner.nextLine();
                     if(!choice.matches("[0-9]")){
-                        UserController.sellStock(choice, user);
+                        UserController.manageWatchlist(user, choice);
                     }
                 }
                 case "0" -> {
-                    running = false;
+                    Session.logout();
+                    System.out.println("Logged out successfully.");
                 }
                 default -> {
                     UserView.userMainMenu();
