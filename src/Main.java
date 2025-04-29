@@ -5,38 +5,37 @@ import Account.Accounts;
 import Account.Session;
 import Account.Users;
 import Account.Admin;
+import Utils.UserMainUtils;
 
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Login login = new Login();
-        int choice;
+        while(true){
+            Accounts user = Login.viewLogin(scanner);
+            Accounts loggedInAccount = Session.getCurrentUser();
 
-        System.out.println("||==================================================================||");
-        System.out.println("||                      WELCOME INVESTIA                            ||");
-        System.out.println("||                   AYO INVESTASI SEKARANG!!                       ||");
-        System.out.println("||==================================================================||");
-        System.out.println();
-        System.out.println("||      Mohon masukkan Username dan Password untuk melanjutkan      ||");
-        System.out.println("||------------------------------------------------------------------||");
-        System.out.print("|| USERNAME : ");
-        String username = scanner.nextLine();
-        System.out.print("|| PASSWORD : ");
-        String password = scanner.nextLine();
-        System.out.println();
-
-        Accounts user = login.login(username, password);
-        Accounts loggedInAccount = Session.getCurrentUser();
-
-        if (user == null) {
-            Routes.loginFailedView();
-        } else {
-            if (user instanceof Users) {
-                Routes.userRoutes((Users) user);
-            } else if (user instanceof Admin) {
-                AdminController.start(scanner);
+            if (user == null) {
+                Routes.loginFailedView();
+            } else {
+                if (user instanceof Users) {
+                    Routes.userRoutes((Users) user);
+                } else if (user instanceof Admin) {
+                    AdminController.start(scanner);
+                }
+            }
+            System.out.println("||==================================================================||");
+            System.out.println("||  Apakah Anda ingin logout dan keluar aplikasi? (y/n)             ||");
+            System.out.println("||==================================================================||");
+            System.out.print("|| MASUKAN PILIHAN : ");
+            String answer = scanner.nextLine();
+            if (answer.equalsIgnoreCase("y")) {
+                System.out.println("Terima kasih telah menggunakan Investia!");
+                break;
+            } else {
+                Session.setCurrentUser(null);
+                UserMainUtils.clearScreen();
             }
         }
         scanner.close();

@@ -1,5 +1,7 @@
 package Routes;
 
+import Account.Login;
+import Account.Session;
 import Account.Users;
 import Controllers.UserController;
 import Controllers.AdminController;
@@ -9,13 +11,14 @@ import Securities.Stocks;
 import Utils.UserMainUtils;
 import View.AdminView;
 import View.UserView;
+import com.sun.tools.javac.Main;
 
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Routes {
     public static void userRoutes(Users user){
         Scanner scanner = new Scanner(System.in);
-        boolean running = true;
         UserMainUtils.clearScreen();
         UserView.userMainMenu();
         UserView.lineInput();
@@ -87,7 +90,6 @@ public class Routes {
                     }else if(choice.equals("12")){
                         UserController.withdraw(user);
                     }
-//                    running = false;
                 }
                 case "5" -> {
                     int page = 1;
@@ -156,14 +158,25 @@ public class Routes {
                     }
                 }
                 case "8" -> {
-                    UserView.viewSellStock(user);
+                    do{
+                        UserView.viewSellStock(user);
+                        choice = scanner.nextLine();
+                        if(!choice.matches("[0-9]")){
+                            UserController.sellStock(choice, user);
+                        }
+                    }while(!choice.matches("[0-9]"));
+                }
+                case "9" -> {
+                    UserView.viewLandingManageWatchlist();
+                    UserView.lineInput();
                     choice = scanner.nextLine();
                     if(!choice.matches("[0-9]")){
-                        UserController.sellStock(choice, user);
+                        UserController.manageWatchlist(user, choice);
                     }
                 }
                 case "0" -> {
-                    running = false;
+                    Session.logout();
+                    UserView.logout();
                 }
                 default -> {
                     UserView.userMainMenu();
@@ -172,6 +185,10 @@ public class Routes {
                 }
             }
         }while(!choice.equals("0"));
+    }
+
+    public static void startAdmin(Scanner scanner) {
+        AdminController.start(scanner);
     }
 
     public static void loginFailedView() {

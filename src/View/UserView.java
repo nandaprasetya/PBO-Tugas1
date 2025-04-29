@@ -428,6 +428,31 @@ public class UserView {
         }
     }
 
+    public static void viewLandingManageWatchlist(){
+        System.out.println("||=====================================================================================||");
+        System.out.println("||                                                                                     ||");
+        System.out.println("||                          TAMBAH DAN HAPUS WATCHLIST                                 ||");
+        System.out.println("||                                                                                     ||");
+        System.out.println("|| PERATURAN :                                                                         ||");
+        System.out.println("||                                                                                     ||");
+        System.out.println("||                                                                                     ||");
+        System.out.println("|| 1. INPUT KODE SAHAM UNTUK MEMASUKAN SAHAM PADA WATCHLIST                            ||");
+        System.out.println("|| 2. JIKA SUDAH MEMASUKAN SAHAM KE WATCHLIST DAN INPUT NAMA SAHAM LAGI AKAN           ||");
+        System.out.println("||    MENGHAPUS SAHAM DARI WATCHLIST                                                   ||");
+        System.out.println("|| 3. HANYA SAHAM YANG DAPAT DIMASUKAN PADA WATCHLIST, SBN TIDAK BISA                  ||");
+        System.out.println("|| 4. WATCHLIST HANYA MAKSIMAL 8 SAHAM                                                 ||");
+        System.out.println("||                                                                                     ||");
+        System.out.println("||=====================================================================================||");
+    }
+
+    public static void logout() {
+        System.out.println("||==================================================================||");
+        System.out.println("||                       LOGOUT BERHASIL!                           ||");
+        System.out.println("||             Terima kasih telah menggunakan INVESTIA              ||");
+        System.out.println("||              Sampai jumpa dan selamat berinvestasi!              ||");
+        System.out.println("||==================================================================||");
+    }
+
     public static void showUserMenu(){
         System.out.println("||=================||==================================================================||");
         System.out.println("|| MAIN MENU       ||                         SELAMAT DATANG                           ||");

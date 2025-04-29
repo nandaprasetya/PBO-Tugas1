@@ -10,7 +10,6 @@ public class Session {
 
     public static void logout() {
         if (currentUser != null) {
-            System.out.println("Logout: " + currentUser.getUsername());
             currentUser = null;
         } else {
             System.out.println("Tidak ada user yang login.");
@@ -19,5 +18,9 @@ public class Session {
 
     public static Accounts getCurrentUser() {
         return currentUser;
+    }
+
+    public static void setCurrentUser(Accounts user) {
+        Session.currentUser = user;
     }
 }
