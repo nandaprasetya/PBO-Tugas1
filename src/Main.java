@@ -12,46 +12,30 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Login login = new Login();
+        while(true){
+            Accounts user = Login.viewLogin(scanner);
+            Accounts loggedInAccount = Session.getCurrentUser();
 
-        Accounts user = null;
-
-        while (true) {
+            if (user == null) {
+                Routes.loginFailedView();
+            } else {
+                if (user instanceof Users) {
+                    Routes.userRoutes((Users) user);
+                } else if (user instanceof Admin) {
+                    AdminController.start(scanner);
+                }
+            }
             System.out.println("||==================================================================||");
-            System.out.println("||                      WELCOME INVESTIA                            ||");
-            System.out.println("||                   AYO INVESTASI SEKARANG!!                       ||");
+            System.out.println("||  Apakah Anda ingin logout dan keluar aplikasi? (y/n)             ||");
             System.out.println("||==================================================================||");
-            System.out.println("||      Mohon masukkan Username dan Password untuk melanjutkan      ||");
-            System.out.println("||==================================================================||");
-            System.out.print("|| USERNAME : ");
-            String username = scanner.nextLine();
-            System.out.print("|| PASSWORD : ");
-            String password = scanner.nextLine();
-            System.out.println();
-
-            user = login.login(username, password);
-
-            if (user != null) {
-                System.out.println("||==================================================================||");
-                System.out.println("||               LOGIN BERHASIL! SELAMAT DATANG " + username.toUpperCase() + "                 ||");
-                System.out.println("||==================================================================||");
+            System.out.print("|| MASUKAN PILIHAN : ");
+            String answer = scanner.nextLine();
+            if (answer.equalsIgnoreCase("y")) {
+                System.out.println("Terima kasih telah menggunakan Investia!");
                 break;
             } else {
+                Session.setCurrentUser(null);
                 UserMainUtils.clearScreen();
-                System.out.println("||==================================================================||");
-                System.out.println("||                USERNAME ATAU PASSWORD SALAH! COBA LAGI           ||");
-                System.out.println("||==================================================================||");
-            }
-        }
-        Accounts loggedInAccount = Session.getCurrentUser();
-
-        if (user == null) {
-            Routes.loginFailedView();
-        } else {
-            if (user instanceof Users) {
-                Routes.userRoutes((Users) user);
-            } else if (user instanceof Admin) {
-                AdminController.start(scanner);
             }
         }
         scanner.close();

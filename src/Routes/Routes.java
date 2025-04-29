@@ -1,5 +1,6 @@
 package Routes;
 
+import Account.Login;
 import Account.Session;
 import Account.Users;
 import Controllers.UserController;
@@ -12,6 +13,7 @@ import View.AdminView;
 import View.UserView;
 import com.sun.tools.javac.Main;
 
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Routes {
@@ -174,7 +176,7 @@ public class Routes {
                 }
                 case "0" -> {
                     Session.logout();
-                    System.out.println("Logged out successfully.");
+                    UserView.logout();
                 }
                 default -> {
                     UserView.userMainMenu();
@@ -183,6 +185,10 @@ public class Routes {
                 }
             }
         }while(!choice.equals("0"));
+    }
+
+    public static void startAdmin(Scanner scanner) {
+        AdminController.start(scanner);
     }
 
     public static void loginFailedView() {

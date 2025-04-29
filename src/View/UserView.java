@@ -445,6 +445,14 @@ public class UserView {
         System.out.println("||=====================================================================================||");
     }
 
+    public static void logout() {
+        System.out.println("||==================================================================||");
+        System.out.println("||                       LOGOUT BERHASIL!                           ||");
+        System.out.println("||             Terima kasih telah menggunakan INVESTIA              ||");
+        System.out.println("||              Sampai jumpa dan selamat berinvestasi!              ||");
+        System.out.println("||==================================================================||");
+    }
+
     public static void showUserMenu(){
         System.out.println("||=================||==================================================================||");
         System.out.println("|| MAIN MENU       ||                         SELAMAT DATANG                           ||");
