@@ -5,186 +5,224 @@ import Account.Session;
 import Account.Users;
 import Controllers.UserController;
 import Controllers.AdminController;
-import Data.SecuritiesData;
-import Securities.Securities;
-import Securities.Stocks;
 import Utils.UserMainUtils;
-import View.AdminView;
 import View.UserView;
-import com.sun.tools.javac.Main;
 
-import java.util.Locale;
 import java.util.Scanner;
 
 public class Routes {
-    public static void userRoutes(Users user){
+    public static void userRoutes(Users user) {
         Scanner scanner = new Scanner(System.in);
+        boolean continueSession = true;
+        if (Session.getCurrentUser() == null) {
+            Session.setCurrentUser(user);
+        }
+
+        while(continueSession) {
+            UserMainUtils.clearScreen();
+
+            if (Session.getCurrentUser() != null) {
+                UserView.userMainMenu();
+                UserView.lineInput();
+
+                String choice = scanner.nextLine();
+
+                switch (choice) {
+                    case "1" -> handleStockListView(scanner);
+                    case "2" -> handleSbnListView(scanner);
+                    case "3" -> handleBuySecurities(user, scanner);
+                    case "4" -> handleBalanceOperations(user, scanner);
+                    case "5" -> handleSbnPortfolioView(user, scanner);
+                    case "6" -> handleStockPortfolioView(user, scanner);
+                    case "7" -> handleSbnSimulation(scanner);
+                    case "8" -> handleSellStock(user, scanner);
+                    case "9" -> handleWatchlistManagement(user, scanner);
+                    case "0" -> {
+                        Session.logout();
+                        UserView.logout();
+                        continueSession = false;
+                    }
+                    default -> {
+                    }
+                }
+            } else {
+                continueSession = false;
+            }
+        }
+    }
+
+    private static void handleStockListView(Scanner scanner) {
+        int page = 1;
+        boolean viewingList = true;
+
+        while(viewingList) {
+            UserMainUtils.clearScreen();
+            UserView.viewListStock(page);
+            UserView.lineInput();
+            String input = scanner.nextLine();
+
+            if(input.matches("[0-9]")) {
+                viewingList = false;
+            } else if(input.equals("NEXT")) {
+                if(page < UserController.maxPageListStock()) {
+                    page += 1;
+                }
+            } else if(input.equals("PREV")) {
+                if(page > 1) {
+                    page -= 1;
+                }
+            } else {
+                viewingList = false;
+            }
+        }
+    }
+
+    private static void handleSbnListView(Scanner scanner) {
+        int page = 1;
+        boolean viewingList = true;
+
+        while(viewingList) {
+            UserMainUtils.clearScreen();
+            UserView.viewListSbn(page);
+            UserView.lineInput();
+            String input = scanner.nextLine();
+
+            if(input.matches("[0-9]")) {
+                viewingList = false;
+            } else if(input.equals("NEXT")) {
+                if(page < UserController.maxPageListSbn()) {
+                    page += 1;
+                }
+            } else if(input.equals("PREV")) {
+                if(page > 1) {
+                    page -= 1;
+                }
+            } else {
+                viewingList = false;
+            }
+        }
+    }
+
+    private static void handleBuySecurities(Users user, Scanner scanner) {
         UserMainUtils.clearScreen();
-        UserView.userMainMenu();
+        UserView.viewBuy(user);
+        System.out.print("|| Kode Saham / Sbn : ");
+        String code = scanner.next();
+        scanner.nextLine();
+
+        if(!code.matches("[0-9]")) {
+            UserController.buyStockSbn(user, code);
+        }
+    }
+
+    private static void handleBalanceOperations(Users user, Scanner scanner) {
+        UserView.viewBalance(user);
         UserView.lineInput();
         String choice = scanner.nextLine();
-        do {
+
+        if(choice.equals("11")) {
+            UserController.topUpBalance(user);
+        } else if(choice.equals("12")) {
+            UserController.withdraw(user);
+        }
+    }
+
+    private static void handleSbnPortfolioView(Users user, Scanner scanner) {
+        int page = 1;
+        boolean viewingPortfolio = true;
+
+        while(viewingPortfolio) {
             UserMainUtils.clearScreen();
-            switch (choice){
-                case "1" -> {
-                    int page = 1;
-                    UserView.viewListStock(page);
-                    UserView.lineInput();
-                    choice = scanner.nextLine();
-                    if(!choice.matches("[0-9]")){
-                        do {
-                            UserMainUtils.clearScreen();
-                            if(choice.equals("NEXT")){
-                                if(page < UserController.maxPageListStock()){
-                                    page += 1;
-                                }
-                                UserView.viewListStock(page);
-                                UserView.lineInput();
-                                choice = scanner.nextLine();
-                            }else if(choice.equals("PREV")){
-                                if(page > 1){
-                                    page -= 1;
-                                }
-                                UserView.viewListStock(page);
-                                UserView.lineInput();
-                                choice = scanner.nextLine();
-                            }
-                        }while(choice.equals("NEXT") || choice.equals("PREV"));
-                    }
+            UserView.viewSbnPortofolio(user, page);
+            UserView.lineInput();
+            String input = scanner.nextLine();
+
+            if(input.matches("[0-9]")) {
+                viewingPortfolio = false;
+            } else if(input.equals("NEXT")) {
+                if(page < UserController.maxPageListSbnPorto(user)) {
+                    page += 1;
                 }
-                case "2" -> {
-                    int page = 1;
-                    UserView.viewListSbn(page);
-                    UserView.lineInput();
-                    choice = scanner.nextLine();
-                    if(!choice.matches("[0-9]")){
-                        do {
-                            UserMainUtils.clearScreen();
-                            if(choice.equals("NEXT")){
-                                if(page < UserController.maxPageListSbn()){
-                                    page += 1;
-                                }
-                                UserView.viewListSbn(page);
-                                UserView.lineInput();
-                                choice = scanner.nextLine();
-                            }else if(choice.equals("PREV")){
-                                if(page > 1){
-                                    page -= 1;
-                                }
-                                UserView.viewListSbn(page);
-                                UserView.lineInput();
-                                choice = scanner.nextLine();
-                            }
-                        }while(choice.equals("NEXT") || choice.equals("PREV"));
-                    }
+            } else if(input.equals("PREV")) {
+                if(page > 1) {
+                    page -= 1;
                 }
-                case "3" -> {
-                    UserController.buyStockSbn(user);
+            } else {
+                viewingPortfolio = false;
+            }
+        }
+    }
+
+    private static void handleStockPortfolioView(Users user, Scanner scanner) {
+        int page = 1;
+        boolean viewingPortfolio = true;
+
+        while(viewingPortfolio) {
+            UserMainUtils.clearScreen();
+            UserView.viewStockPortofolio(user, page);
+            UserView.lineInput();
+            String input = scanner.nextLine();
+
+            if(input.matches("[0-9]")) {
+                viewingPortfolio = false;
+            } else if(input.equals("NEXT")) {
+                if(page < UserController.maxPageListStockPorto(user)) {
+                    page += 1;
                 }
-                case "4" -> {
-                    UserView.viewBalance(user);
-                    UserView.lineInput();
-                    choice = scanner.nextLine();
-                    if(choice.equals("11")){
-                        UserController.topUpBalance(user);
-                    }else if(choice.equals("12")){
-                        UserController.withdraw(user);
-                    }
+            } else if(input.equals("PREV")) {
+                if(page > 1) {
+                    page -= 1;
                 }
-                case "5" -> {
-                    int page = 1;
-                    UserView.viewSbnPortofolio(user, page);
-                    UserView.lineInput();
-                    choice = scanner.nextLine();
-                    if(!choice.matches("[0-9]")){
-                        do {
-                            UserMainUtils.clearScreen();
-                            if(choice.equals("NEXT")){
-                                if(page < UserController.maxPageListSbnPorto(user)){
-                                    page += 1;
-                                }
-                                UserView.viewSbnPortofolio(user, page);
-                                UserView.lineInput();
-                                choice = scanner.nextLine();
-                            }else if(choice.equals("PREV")){
-                                if(page > 1){
-                                    page -= 1;
-                                }
-                                UserView.viewSbnPortofolio(user, page);
-                                UserView.lineInput();
-                                choice = scanner.nextLine();
-                            }
-                        }while(choice.equals("NEXT") || choice.equals("PREV"));
-                    }
-                }
-                case "6" -> {
-                    int page = 1;
-                    UserView.viewStockPortofolio(user, page);
-                    UserView.lineInput();
-                    choice = scanner.nextLine();
-                    if(!choice.matches("[0-9]")){
-                        do {
-                            UserMainUtils.clearScreen();
-                            if(choice.equals("NEXT")){
-                                if(page < UserController.maxPageListStockPorto(user)){
-                                    page += 1;
-                                }
-                                UserView.viewStockPortofolio(user, page);
-                                UserView.lineInput();
-                                choice = scanner.nextLine();
-                            }else if(choice.equals("PREV")){
-                                if(page > 1){
-                                    page -= 1;
-                                }
-                                UserView.viewStockPortofolio(user, page);
-                                UserView.lineInput();
-                                choice = scanner.nextLine();
-                            }
-                        }while(choice.equals("NEXT") || choice.equals("PREV"));
-                    }
-                }
-                case "7" -> {
-                    UserMainUtils.clearScreen();
-                    UserView.landingSimulationSbn();
-                    UserView.lineInput();
-                    choice = scanner.nextLine();
-                    if(!choice.matches("[0-9]")){
-                        do{
-                            UserMainUtils.clearScreen();
-                            UserView.viewSimulationSbn(choice);
-                            UserView.lineInput();
-                            choice = scanner.nextLine();
-                        } while(!choice.matches("[0-9]"));
-                    }
-                }
-                case "8" -> {
-                    do{
-                        UserView.viewSellStock(user);
-                        choice = scanner.nextLine();
-                        if(!choice.matches("[0-9]")){
-                            UserController.sellStock(choice, user);
-                        }
-                    }while(!choice.matches("[0-9]"));
-                }
-                case "9" -> {
-                    UserView.viewLandingManageWatchlist();
-                    UserView.lineInput();
-                    choice = scanner.nextLine();
-                    if(!choice.matches("[0-9]")){
-                        UserController.manageWatchlist(user, choice);
-                    }
-                }
-                case "0" -> {
-                    Session.logout();
-                    UserView.logout();
-                }
-                default -> {
-                    UserView.userMainMenu();
-                    UserView.lineInput();
-                    choice = scanner.nextLine();
+            } else {
+                viewingPortfolio = false;
+            }
+        }
+    }
+
+    private static void handleSbnSimulation(Scanner scanner) {
+        UserMainUtils.clearScreen();
+        UserView.landingSimulationSbn();
+        UserView.lineInput();
+        String input = scanner.nextLine();
+
+        if(!input.matches("[0-9]")) {
+            boolean simulationRunning = true;
+            while(simulationRunning) {
+                UserMainUtils.clearScreen();
+                UserView.viewSimulationSbn(input);
+                UserView.lineInput();
+                input = scanner.nextLine();
+
+                if(input.matches("[0-9]")) {
+                    simulationRunning = false;
                 }
             }
-        }while(!choice.equals("0"));
+        }
+    }
+
+    private static void handleSellStock(Users user, Scanner scanner) {
+        boolean sellingStock = true;
+
+        while(sellingStock) {
+            UserView.viewSellStock(user);
+            String input = scanner.nextLine();
+
+            if(input.matches("[0-9]")) {
+                sellingStock = false;
+            } else {
+                UserController.sellStock(input, user);
+            }
+        }
+    }
+
+    private static void handleWatchlistManagement(Users user, Scanner scanner) {
+        UserView.viewLandingManageWatchlist();
+        UserView.lineInput();
+        String choice = scanner.nextLine();
+
+        if(!choice.matches("[0-9]")) {
+            UserController.manageWatchlist(user, choice);
+        }
     }
 
     public static void startAdmin(Scanner scanner) {

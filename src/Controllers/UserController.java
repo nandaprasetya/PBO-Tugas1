@@ -190,22 +190,22 @@ public class UserController {
         return listSbn;
     }
 
-    public static void buyStockSbn(Users user){
+    public static void buyStockSbn(Users user, String code){
         boolean isStocks = false;
         boolean isSbn = false;
         boolean isLoop = false;
         do {
-            UserMainUtils.clearScreen();
-            UserView.viewBuy(user);
             if(isLoop == true){
+                UserMainUtils.clearScreen();
+                UserView.viewBuy(user);
                 System.out.println("||=====================================================================================||");
                 System.out.println("||                               KODE SAHAM/SBN SALAH                                  ||");
                 System.out.println("||=====================================================================================||");
+                System.out.print("|| Kode Saham / Sbn : ");
+                code = scanner.next();
             }
-            System.out.print("|| Kode Saham / Sbn : ");
-            String stockCode = scanner.next();
             for(Stocks stock : SecuritiesData.stocksList){
-                if (stock.getCode().equalsIgnoreCase(stockCode)) {
+                if (stock.getCode().equalsIgnoreCase(code)) {
                     isStocks = true;
                     System.out.print("|| Jumlah Saham : ");
                     int quantity = scanner.nextInt();
@@ -221,7 +221,7 @@ public class UserController {
                             System.out.println("||                               TRANSAKSI BERHASIL                                    ||");
                             System.out.println("||                                                                                     ||");
                             System.out.println("||=====================================================================================||");
-                            System.out.println("|| Anda Membeli : " + stockCode + UserMainUtils.paddingText(69, stockCode) + "||");
+                            System.out.println("|| Anda Membeli : " + code + UserMainUtils.paddingText(69, code) + "||");
                             System.out.println("|| Jumlah : " + quantity + " LOT" + UserMainUtils.paddingText(71, String.valueOf(quantity)) + "||");
                             System.out.println("|| Harga Per Lembar : Rp. " + UserMainUtils.formatRupiah((long) stock.getCurrentPrice()) + UserMainUtils.paddingText(61, UserMainUtils.formatRupiah((long) stock.getCurrentPrice())) + "||");
                             System.out.println("|| Total Pembayaran : Rp. " + UserMainUtils.formatRupiah((long) total) + UserMainUtils.paddingText(61, UserMainUtils.formatRupiah((long) total)) + "||");
@@ -234,8 +234,6 @@ public class UserController {
                                 e.printStackTrace();
                             }
                         }
-                        Accounts loggedInAccount = Session.getCurrentUser();
-                        Routes.userRoutes((Users) loggedInAccount);
                     }else{
                         for(int i = 5; i >= 1; i--) {
                             UserMainUtils.clearScreen();
@@ -252,13 +250,13 @@ public class UserController {
                                 e.printStackTrace();
                             }
                         }
-                        Accounts loggedInAccount = Session.getCurrentUser();
-                        Routes.userRoutes((Users) loggedInAccount);
                     }
+                    Accounts loggedInAccount = getCurrentUser();
+                    Routes.userRoutes((Users) loggedInAccount);
                 }
             }
             for(SBNs sbn : SecuritiesData.sbnsList){
-                if (sbn.getCode().equalsIgnoreCase(stockCode)) {
+                if (sbn.getCode().equalsIgnoreCase(code)) {
                     isSbn = true;
                     int quantity;
                     System.out.print("|| Jumlah Sbn : ");
@@ -276,7 +274,7 @@ public class UserController {
                                 System.out.println("||                               TRANSAKSI BERHASIL                                    ||");
                                 System.out.println("||                                                                                     ||");
                                 System.out.println("||=====================================================================================||");
-                                System.out.println("|| Anda Membeli : " + stockCode + UserMainUtils.paddingText(69, stockCode) + "||");
+                                System.out.println("|| Anda Membeli : " + code + UserMainUtils.paddingText(69, code) + "||");
                                 System.out.println("|| Jumlah : " + quantity + " UNIT" + UserMainUtils.paddingText(70, String.valueOf(quantity)) + "||");
                                 System.out.println("|| Harga Per Unit : Rp. " + UserMainUtils.formatRupiah((long) sbn.getPrice()) + UserMainUtils.paddingText(63, UserMainUtils.formatRupiah((long) sbn.getPrice())) + "||");
                                 System.out.println("|| Total Pembayaran : Rp. " + UserMainUtils.formatRupiah((long) total) + UserMainUtils.paddingText(61, UserMainUtils.formatRupiah((long) total)) + "||");
@@ -289,8 +287,6 @@ public class UserController {
                                     e.printStackTrace();
                                 }
                             }
-                            Accounts loggedInAccount = Session.getCurrentUser();
-                            Routes.userRoutes((Users) loggedInAccount);
                         }else{
                             for(int i = 5; i >= 1; i--){
                                 System.out.println("||=====================================================================================||");
@@ -306,9 +302,9 @@ public class UserController {
                                     e.printStackTrace();
                                 }
                             }
-                            Accounts loggedInAccount = Session.getCurrentUser();
-                            Routes.userRoutes((Users) loggedInAccount);
                         }
+                        Accounts loggedInAccount = getCurrentUser();
+                        Routes.userRoutes((Users) loggedInAccount);
                     } else{
                         for(int i = 5; i >= 1; i--) {
                             UserMainUtils.clearScreen();
@@ -325,7 +321,7 @@ public class UserController {
                                 e.printStackTrace();
                             }
                         }
-                        Accounts loggedInAccount = Session.getCurrentUser();
+                        Accounts loggedInAccount = getCurrentUser();
                         Routes.userRoutes((Users) loggedInAccount);
                     }
                 }
