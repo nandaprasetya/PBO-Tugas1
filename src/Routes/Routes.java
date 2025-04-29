@@ -14,27 +14,28 @@ public class Routes {
     public static void userRoutes(Users user) {
         Scanner scanner = new Scanner(System.in);
         boolean continueSession = true;
+        String choice="";
         if (Session.getCurrentUser() == null) {
             Session.setCurrentUser(user);
         }
 
-        while(continueSession) {
+        if (Session.getCurrentUser() != null) {
             UserMainUtils.clearScreen();
+            UserView.userMainMenu();
+            UserView.lineInput();
+            choice = scanner.nextLine();
+        }
 
+        while(continueSession) {
             if (Session.getCurrentUser() != null) {
-                UserView.userMainMenu();
-                UserView.lineInput();
-
-                String choice = scanner.nextLine();
-
                 switch (choice) {
-                    case "1" -> handleStockListView(scanner);
-                    case "2" -> handleSbnListView(scanner);
+                    case "1" -> choice = handleStockListView(scanner);
+                    case "2" -> choice = handleSbnListView(scanner);
                     case "3" -> handleBuySecurities(user, scanner);
-                    case "4" -> handleBalanceOperations(user, scanner);
-                    case "5" -> handleSbnPortfolioView(user, scanner);
-                    case "6" -> handleStockPortfolioView(user, scanner);
-                    case "7" -> handleSbnSimulation(scanner);
+                    case "4" -> choice = handleBalanceOperations(user, scanner);
+                    case "5" -> choice = handleSbnPortfolioView(user, scanner);
+                    case "6" -> choice = handleStockPortfolioView(user, scanner);
+                    case "7" -> choice = handleSbnSimulation(scanner);
                     case "8" -> handleSellStock(user, scanner);
                     case "9" -> handleWatchlistManagement(user, scanner);
                     case "0" -> {
@@ -51,56 +52,60 @@ public class Routes {
         }
     }
 
-    private static void handleStockListView(Scanner scanner) {
+    private static String handleStockListView(Scanner scanner) {
         int page = 1;
-        boolean viewingList = true;
-
-        while(viewingList) {
-            UserMainUtils.clearScreen();
-            UserView.viewListStock(page);
-            UserView.lineInput();
-            String input = scanner.nextLine();
-
-            if(input.matches("[0-9]")) {
-                viewingList = false;
-            } else if(input.equals("NEXT")) {
-                if(page < UserController.maxPageListStock()) {
-                    page += 1;
+        UserView.viewListStock(page);
+        UserView.lineInput();
+        String choice = scanner.nextLine();
+        if(!choice.matches("[0-9]")){
+            do {
+                UserMainUtils.clearScreen();
+                if(choice.equals("NEXT")){
+                    if(page < UserController.maxPageListStock()){
+                        page += 1;
+                    }
+                    UserView.viewListStock(page);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                }else if(choice.equals("PREV")){
+                    if(page > 1){
+                        page -= 1;
+                    }
+                    UserView.viewListStock(page);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
                 }
-            } else if(input.equals("PREV")) {
-                if(page > 1) {
-                    page -= 1;
-                }
-            } else {
-                viewingList = false;
-            }
+            }while(choice.equals("NEXT") || choice.equals("PREV"));
         }
+        return choice;
     }
 
-    private static void handleSbnListView(Scanner scanner) {
+    private static String handleSbnListView(Scanner scanner) {
         int page = 1;
-        boolean viewingList = true;
-
-        while(viewingList) {
-            UserMainUtils.clearScreen();
-            UserView.viewListSbn(page);
-            UserView.lineInput();
-            String input = scanner.nextLine();
-
-            if(input.matches("[0-9]")) {
-                viewingList = false;
-            } else if(input.equals("NEXT")) {
-                if(page < UserController.maxPageListSbn()) {
-                    page += 1;
+        UserView.viewListSbn(page);
+        UserView.lineInput();
+        String choice = scanner.nextLine();
+        if(!choice.matches("[0-9]")){
+            do {
+                UserMainUtils.clearScreen();
+                if(choice.equals("NEXT")){
+                    if(page < UserController.maxPageListSbn()){
+                        page += 1;
+                    }
+                    UserView.viewListSbn(page);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                }else if(choice.equals("PREV")){
+                    if(page > 1){
+                        page -= 1;
+                    }
+                    UserView.viewListSbn(page);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
                 }
-            } else if(input.equals("PREV")) {
-                if(page > 1) {
-                    page -= 1;
-                }
-            } else {
-                viewingList = false;
-            }
+            }while(choice.equals("NEXT") || choice.equals("PREV"));
         }
+        return choice;
     }
 
     private static void handleBuySecurities(Users user, Scanner scanner) {
@@ -115,7 +120,7 @@ public class Routes {
         }
     }
 
-    private static void handleBalanceOperations(Users user, Scanner scanner) {
+    private static String handleBalanceOperations(Users user, Scanner scanner) {
         UserView.viewBalance(user);
         UserView.lineInput();
         String choice = scanner.nextLine();
@@ -125,85 +130,86 @@ public class Routes {
         } else if(choice.equals("12")) {
             UserController.withdraw(user);
         }
+
+        return choice;
     }
 
-    private static void handleSbnPortfolioView(Users user, Scanner scanner) {
+    private static String handleSbnPortfolioView(Users user, Scanner scanner) {
         int page = 1;
-        boolean viewingPortfolio = true;
-
-        while(viewingPortfolio) {
-            UserMainUtils.clearScreen();
-            UserView.viewSbnPortofolio(user, page);
-            UserView.lineInput();
-            String input = scanner.nextLine();
-
-            if(input.matches("[0-9]")) {
-                viewingPortfolio = false;
-            } else if(input.equals("NEXT")) {
-                if(page < UserController.maxPageListSbnPorto(user)) {
-                    page += 1;
+        UserView.viewSbnPortofolio(user, page);
+        UserView.lineInput();
+        String choice = scanner.nextLine();
+        if(!choice.matches("[0-9]")){
+            do {
+                UserMainUtils.clearScreen();
+                if(choice.equals("NEXT")){
+                    if(page < UserController.maxPageListSbnPorto(user)){
+                        page += 1;
+                    }
+                    UserView.viewSbnPortofolio(user, page);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                }else if(choice.equals("PREV")){
+                    if(page > 1){
+                        page -= 1;
+                    }
+                    UserView.viewSbnPortofolio(user, page);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
                 }
-            } else if(input.equals("PREV")) {
-                if(page > 1) {
-                    page -= 1;
-                }
-            } else {
-                viewingPortfolio = false;
-            }
+            }while(choice.equals("NEXT") || choice.equals("PREV"));
         }
+        return choice;
     }
 
-    private static void handleStockPortfolioView(Users user, Scanner scanner) {
+    private static String handleStockPortfolioView(Users user, Scanner scanner) {
         int page = 1;
-        boolean viewingPortfolio = true;
-
-        while(viewingPortfolio) {
-            UserMainUtils.clearScreen();
-            UserView.viewStockPortofolio(user, page);
-            UserView.lineInput();
-            String input = scanner.nextLine();
-
-            if(input.matches("[0-9]")) {
-                viewingPortfolio = false;
-            } else if(input.equals("NEXT")) {
-                if(page < UserController.maxPageListStockPorto(user)) {
-                    page += 1;
+        UserView.viewStockPortofolio(user, page);
+        UserView.lineInput();
+        String choice = scanner.nextLine();
+        if(!choice.matches("[0-9]")){
+            do {
+                UserMainUtils.clearScreen();
+                if(choice.equals("NEXT")){
+                    if(page < UserController.maxPageListStockPorto(user)){
+                        page += 1;
+                    }
+                    UserView.viewStockPortofolio(user, page);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
+                }else if(choice.equals("PREV")){
+                    if(page > 1){
+                        page -= 1;
+                    }
+                    UserView.viewStockPortofolio(user, page);
+                    UserView.lineInput();
+                    choice = scanner.nextLine();
                 }
-            } else if(input.equals("PREV")) {
-                if(page > 1) {
-                    page -= 1;
-                }
-            } else {
-                viewingPortfolio = false;
-            }
+            }while(choice.equals("NEXT") || choice.equals("PREV"));
         }
+        return choice;
     }
 
-    private static void handleSbnSimulation(Scanner scanner) {
+    private static String handleSbnSimulation(Scanner scanner) {
         UserMainUtils.clearScreen();
         UserView.landingSimulationSbn();
         UserView.lineInput();
-        String input = scanner.nextLine();
-
-        if(!input.matches("[0-9]")) {
-            boolean simulationRunning = true;
-            while(simulationRunning) {
+        String choice = scanner.nextLine();
+        if(!choice.matches("[0-9]")){
+            do{
                 UserMainUtils.clearScreen();
-                UserView.viewSimulationSbn(input);
+                UserView.viewSimulationSbn(choice);
                 UserView.lineInput();
-                input = scanner.nextLine();
-
-                if(input.matches("[0-9]")) {
-                    simulationRunning = false;
-                }
-            }
+                choice = scanner.nextLine();
+            } while(!choice.matches("[0-9]"));
         }
+        return choice;
     }
 
     private static void handleSellStock(Users user, Scanner scanner) {
         boolean sellingStock = true;
 
-        while(sellingStock) {
+        while(sellingStock && Session.getCurrentUser() != null) {
             UserView.viewSellStock(user);
             String input = scanner.nextLine();
 

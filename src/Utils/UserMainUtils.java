@@ -26,7 +26,7 @@ public class UserMainUtils {
 
     public static String formatRupiah(long number) {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-        symbols.setGroupingSeparator('.'); //
+        symbols.setGroupingSeparator('.');
 
         DecimalFormat formatter = new DecimalFormat("#,###", symbols);
 

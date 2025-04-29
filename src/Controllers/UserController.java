@@ -125,7 +125,7 @@ public class UserController {
 
     public static int maxPageListSbnPorto(Users user){
         List<SBNs> listSbn = SecuritiesData.getSbnsList();
-        ArrayList<PortfolioItem> sbnPorto = Users.getPortfolio();
+        ArrayList<PortfolioItem> sbnPorto = user.getPortfolio();
         int portoCount = 0;
         for (SBNs sbn : listSbn) {
             for(PortfolioItem porto : sbnPorto){
@@ -146,7 +146,7 @@ public class UserController {
 
     public static int maxPageListStockPorto(Users user){
         List<Stocks> listStock = SecuritiesData.getStocksList();
-        ArrayList<PortfolioItem> sbnPorto = Users.getPortfolio();
+        ArrayList<PortfolioItem> sbnPorto = user.getPortfolio();
         int portoCount = 0;
         for (Stocks stock : listStock) {
             for(PortfolioItem porto : sbnPorto){
@@ -330,10 +330,10 @@ public class UserController {
         }while (!isStocks && !isSbn);
     }
 
-    public static int getStockBalance(){
+    public static int getStockBalance(Users user){
         int totalStockBalance = 0;
         for(Stocks stock : SecuritiesData.getStocksList()){
-            for(PortfolioItem porto : Users.getPortfolio()){
+            for(PortfolioItem porto : user.getPortfolio()){
                 if(porto.getSecurities().getCode().equalsIgnoreCase(stock.getCode())){
                     totalStockBalance += (int) (stock.getCurrentPrice() * porto.getQuantity() * 100);
                 }
@@ -505,7 +505,7 @@ public class UserController {
     }
 
     public static List<String> listSbnPortofolio(Users user) {
-        ArrayList<PortfolioItem> items = Users.getPortfolio();
+        ArrayList<PortfolioItem> items = user.getPortfolio();
         List<String> listSbn = new ArrayList<>();
         if (items.isEmpty()) {
             listSbn.add("                       PORTOFOLIO KOSONG                          ||");
@@ -536,7 +536,7 @@ public class UserController {
     }
 
     public static List<String> listStockPortofolio(Users user){
-        ArrayList<PortfolioItem> items = Users.getPortfolio();
+        ArrayList<PortfolioItem> items = user.getPortfolio();
         List<String> listStock = new ArrayList<>();
         if (items.isEmpty()) {
             listStock.add("                       PORTOFOLIO KOSONG                          ||");
@@ -617,7 +617,7 @@ public class UserController {
     }
 
     public static void sellStock(String code, Users user){
-        ArrayList<PortfolioItem> items = Users.getPortfolio();
+        ArrayList<PortfolioItem> items = user.getPortfolio();
         boolean found = false;
         for(PortfolioItem item : new ArrayList<>(items)){
             if(item.getSecurities().getCode().equalsIgnoreCase(code)){
